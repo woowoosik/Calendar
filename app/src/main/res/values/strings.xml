@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Calendar</string>
+
+
+    <string name="navigation_tab1">월 간</string>
+    <string name="navigation_tab2">주 간</string>
+    <string name="navigation_tab3">일 간</string>
+
+    <string name="schedule_add">저장하기</string>
+
+
+
+</resources>
