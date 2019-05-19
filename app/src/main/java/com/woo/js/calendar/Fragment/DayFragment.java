@@ -224,12 +224,6 @@ public class DayFragment extends Fragment implements View.OnClickListener {
         Log.e("@day_onStop","onStop");
 
 
-        SharedPreferences prefs = this.getActivity().getSharedPreferences("pref_tab", Context.MODE_PRIVATE);
-        SharedPreferences.Editor edit = prefs.edit();
-        String num="2";
-        edit.putString("pref_tab", num);
-        System.out.println(" day_tab :"+ num);
-        edit.apply();
     }
 
     @Override

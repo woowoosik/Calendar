@@ -306,12 +306,7 @@ public class MonthFragment  extends Fragment implements AdapterView.OnItemClickL
         Log.e("@month_onStop","__onStop");
 
 
-        SharedPreferences prefs = this.getActivity().getSharedPreferences("pref_tab", Context.MODE_PRIVATE);
-        SharedPreferences.Editor edit = prefs.edit();
-        String num="0";
-        edit.putString("pref_tab", num);
-        System.out.println(" month_tab :"+ num);
-        edit.apply();
+
     }
 
     @Override

@@ -260,12 +260,7 @@ public class WeekFragment  extends Fragment implements  OnMonthChangedListener, 
         super.onStop();
         Log.e("@week_onStop","__onStop");
 
-        SharedPreferences prefs = this.getActivity().getSharedPreferences("pref_tab", Context.MODE_PRIVATE);
-        SharedPreferences.Editor edit = prefs.edit();
-        String num="1";
-        edit.putString("pref_tab", num);
-        System.out.println(" week_tab :"+ num);
-        edit.apply();
+
 
     }
 

@@ -51,6 +51,10 @@ public class MainActivity extends AppCompatActivity {
             weekFragment = new WeekFragment();
             transaction.replace(R.id.main_fragment, weekFragment).commitAllowingStateLoss();
             navigation.getMenu().findItem(R.id.navigation_week).setChecked(true);
+        } else if(tab.equals("0")){
+            monthFragment = new MonthFragment();
+            transaction.replace(R.id.main_fragment, monthFragment).commitAllowingStateLoss();
+            navigation.getMenu().findItem(R.id.navigation_month).setChecked(true);
         } else{
             monthFragment = new MonthFragment();
             transaction.replace(R.id.main_fragment, monthFragment).commitAllowingStateLoss();
@@ -74,10 +78,14 @@ public class MainActivity extends AppCompatActivity {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             switch (item.getItemId()) {
                 case R.id.navigation_month:
+                    edit = prefs.edit();
+                    String mnum="0";
+                    edit.putString("pref_tab", mnum);
+                    Log.e("@ week_tab ",mnum);
+                    edit.apply();
 
                     if(monthFragment == null) {
                         monthFragment = new MonthFragment();
-
                         if (weekFragment != null){
                             fragmentManager.beginTransaction().hide(weekFragment).commit();}
                         if (dayFragment != null){
@@ -95,8 +103,12 @@ public class MainActivity extends AppCompatActivity {
 
                     return true;
                 case R.id.navigation_week:
+                    edit = prefs.edit();
+                    String wnum="1";
+                    edit.putString("pref_tab", wnum);
+                    Log.e("@ month_tab ",wnum);
+                    edit.apply();
                     if(weekFragment == null) {
-
                         weekFragment = new WeekFragment();
 
                         if (monthFragment != null){
@@ -116,6 +128,11 @@ public class MainActivity extends AppCompatActivity {
 
                     return true;
                 case R.id.navigation_day:
+                    edit = prefs.edit();
+                    String dnum="2";
+                    edit.putString("pref_tab", dnum);
+                    Log.e("@ day_tab ",dnum);
+                    edit.apply();
                     if(dayFragment == null) {
 
                         dayFragment = new DayFragment();
