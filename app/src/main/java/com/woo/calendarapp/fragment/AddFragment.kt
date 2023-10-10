@@ -198,7 +198,7 @@ class AddFragment : Fragment() {
                     val mp = MapPoint.mapPointWithGeoCoord(location!!.latitude, location.longitude)
                     mapView.setMapCenterPoint(mp, true)
                     mapView.setZoomLevel(1, true)
-                    marker(location, " Pick")
+                    marker(location, "pick")
                 }
         }else{
             val locationPermissionRequest = registerForActivityResult(
