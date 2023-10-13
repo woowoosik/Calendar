@@ -7,7 +7,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woo.calendarapp.EventObserver
+import com.woo.calendarapp.KakaoRetrofit
 import com.woo.calendarapp.R
+import com.woo.calendarapp.kakaoApi.KakaoAPI
 import com.woo.calendarapp.module.RepositoryRoom
 import com.woo.calendarapp.repository.Repository
 import com.woo.calendarapp.schedule.Schedule
@@ -15,6 +17,11 @@ import com.woo.calendarapp.schedule.Schedulebar
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import org.joda.time.DateTime
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,6 +44,19 @@ class MainViewModel @Inject constructor(
     private lateinit var monthList : List<DateTime>
 
 
+    var clickMapLocation : MutableLiveData<Pair<Double,Double>> = MutableLiveData()
+    fun setLocation(x:Double, y:Double){
+        clickMapLocation.value = Pair(x,y)
+    }
+    fun getLocation() = clickMapLocation.value
+
+    val _updateKeywordMap : MutableLiveData<EventObserver.Event<Boolean>> = MutableLiveData()
+    val updateKeywordMap : LiveData<EventObserver.Event<Boolean>> = _updateKeywordMap
+
+
+
+
+
     private val _addComplate : MutableLiveData<EventObserver.Event<Boolean>> = MutableLiveData()
     val addComplate : LiveData<EventObserver.Event<Boolean>> = _addComplate
 
@@ -54,6 +74,83 @@ class MainViewModel @Inject constructor(
 
     private val _updateOpen : MutableLiveData<EventObserver.Event<Boolean>> = MutableLiveData()
     val updateOpen : LiveData<EventObserver.Event<Boolean>> = _updateOpen
+
+    private val _searchKeyword : MutableLiveData<EventObserver.Event<Boolean>> = MutableLiveData()
+    val searchKeyword : LiveData<EventObserver.Event<Boolean>> = _searchKeyword
+
+
+    private lateinit var searchKeyList : KakaoRetrofit.ResultSearchKeyword
+    fun getSearchKeyList() = searchKeyList
+
+    fun searchKeyword(k:String){
+        viewModelScope.launch(Dispatchers.IO) { //코루틴
+
+
+/*
+
+            val job = CoroutineScope(Dispatchers.Default).launch {
+                 searchKeyList = repo.getSearchKeyword(k)
+
+                println("viewmodel@@@@ = ${searchKeyList.documents.size}")
+            }
+            job.join()
+*/
+
+            /*val baseUrl = "https://dapi.kakao.com/"
+            val retrofit = Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+
+            val api = retrofit.create(KakaoAPI::class.java) // 통신 인터페이스를 객체로 생성
+
+            searchKeyList = KakaoRetrofit.ResultSearchKeyword(mutableListOf())
+
+            var list : MutableList<KakaoRetrofit.Place> = mutableListOf()
+            for(i in 1..3){
+                val call =
+                    api.getSearchKeyword("KakaoAK 52109dafc4fdea8d693a1cfb2a51d9f3", k.replace("\\s".toRegex(), ""), i) // 검색 조건 입력
+
+                val response = call.execute()
+                println("CoroutineScope 1")
+                CoroutineScope(Dispatchers.Main).launch {
+                    val job = CoroutineScope(Dispatchers.Main).launch {
+                        val body = response.body()
+
+                        println("CoroutineScope 2")
+                        if (response.isSuccessful) {
+                            if (body != null) {
+                                for(i in 0 until body.documents.size){
+                                    list.add(body.documents[i])
+                                }
+                                println("${response}")
+                            //    println("CoroutineScope 3 ${searchKeyList.documents.size}    ${searchKeyList.documents[0].place_name}")
+                            }
+                        } else {
+                            Log.d("Retrofit", "이미지 찾기 | 통신 실패")
+                        }
+                    }
+                    job.join()
+
+                }
+
+            }
+
+            searchKeyList.documents = list
+*/
+            val job = CoroutineScope(Dispatchers.Default).launch {
+                searchKeyList = repo.getSearchKeyword(k)
+
+                println("viewmodel@@@@ = ${searchKeyList.documents.size}")
+            }
+            job.join()
+
+
+            println("viewmodel@@@@ ${searchKeyList.documents.size}")
+            _searchKeyword.postValue(EventObserver.Event(true))
+
+        }
+    }
 
 
     fun updateOpen(){

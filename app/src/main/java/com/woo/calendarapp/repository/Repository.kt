@@ -1,6 +1,7 @@
 package com.woo.calendarapp.repository
 
 import androidx.lifecycle.LiveData
+import com.woo.calendarapp.KakaoRetrofit
 import com.woo.calendarapp.schedule.Schedule
 import org.joda.time.DateTime
 
@@ -17,6 +18,8 @@ interface Repository {
     suspend fun setDeleteDate(id:Int)
 
     suspend fun setUpdateData(id: Int, schedule: Schedule)
+
+    suspend fun getSearchKeyword(keyword:String) : KakaoRetrofit.ResultSearchKeyword
 
 /*
 
