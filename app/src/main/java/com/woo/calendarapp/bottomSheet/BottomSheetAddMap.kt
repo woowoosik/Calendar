@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.woo.calendarapp.KakaoRetrofit
+import com.woo.calendarapp.LoadingDialog
 import com.woo.calendarapp.R
 import com.woo.calendarapp.adapter.BottomAddMapAdapter
 import com.woo.calendarapp.databinding.BottomsheetAddMapBinding
@@ -107,9 +108,9 @@ class BottomSheetAddMap : BottomSheetDialogFragment() {
 
     }
 
-
     override fun onStop() {
         super.onStop()
+        Log.w("addMap", "onStop")
        // bottomSheetBehavior!!.state = BottomSheetBehavior.STATE_HIDDEN
     }
 }

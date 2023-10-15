@@ -24,7 +24,9 @@ class RepositoryImpl @Inject constructor(
         schedule.title,
         schedule.content,
         schedule.scheduleBarColor,
-        schedule.scheduleTextColor
+        schedule.scheduleTextColor,
+        schedule.x,
+        schedule.y
     )
     override suspend fun getRoomAllData() : List<Schedule> = dao.getAllDate()
 
@@ -41,7 +43,9 @@ class RepositoryImpl @Inject constructor(
         schedule.title,
         schedule.content,
         schedule.scheduleBarColor,
-        schedule.scheduleTextColor
+        schedule.scheduleTextColor,
+        schedule.x,
+        schedule.y
     )
 
     override suspend fun getSearchKeyword(keyword: String):

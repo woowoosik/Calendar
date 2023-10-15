@@ -12,7 +12,9 @@ data class Schedule(
     var title : String,
     var content : String,
     var scheduleBarColor : Int,
-    var scheduleTextColor : Int
+    var scheduleTextColor : Int,
+    var x:Double,
+    var y:Double
 ){
     @PrimaryKey(autoGenerate = true) var id: Int = 0
 }

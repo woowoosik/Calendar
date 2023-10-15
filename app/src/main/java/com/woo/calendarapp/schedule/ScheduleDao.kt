@@ -21,8 +21,8 @@ interface ScheduleDao {
     fun getMonthDate(start: DateTime, end:DateTime):List<Schedule>
 
 
-    @Query("INSERT INTO SCHEDULE(startDate, endDate, title, content, scheduleBarColor ,scheduleTextColor) VALUES(:sd,:ed,:t,:c,:sb,:st)")
-    fun setInsertData(sd:DateTime, ed:DateTime, t:String, c:String, sb:Int, st:Int)
+    @Query("INSERT INTO SCHEDULE(startDate, endDate, title, content, scheduleBarColor ,scheduleTextColor, x, y) VALUES(:sd,:ed,:t,:c,:sb,:st, :x, :y)")
+    fun setInsertData(sd:DateTime, ed:DateTime, t:String, c:String, sb:Int, st:Int, x:Double, y:Double)
 
     @Query("SELECT * FROM SCHEDULE WHERE  " +
             "(startDate <= :date AND :date <= endDate) "+
@@ -32,8 +32,11 @@ interface ScheduleDao {
     @Query("Delete From SCHEDULE where id = :id")
     fun setDeleteData(id :Int)
 
-    @Query("UPDATE SCHEDULE SET startDate = :sd, endDate = :ed, title = :t, content = :c, scheduleBarColor = :sb, scheduleTextColor = :st WHERE id=:id")
-    fun setUpdateData(id: Int, sd:DateTime, ed:DateTime, t:String, c:String, sb:Int, st:Int)
+    @Query("UPDATE SCHEDULE SET startDate = :sd, endDate = :ed, title = :t, content = :c, scheduleBarColor = :sb, scheduleTextColor = :st, x= :x, y = :y WHERE id=:id")
+    fun setUpdateData(id: Int, sd:DateTime, ed:DateTime, t:String, c:String, sb:Int, st:Int, x:Double, y:Double)
+
+
+
 
 
     /*

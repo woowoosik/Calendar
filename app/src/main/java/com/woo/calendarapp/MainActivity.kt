@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity(){
         mainBinding.vm = mainViewModel
 
 
+
         mainViewModel.addMainComplate.observe(this, EventObserver {
             val n = DateTime.now().toString("MM")
             val h = DateTime(mainViewModel.getDate()).toString("MM")

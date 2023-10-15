@@ -22,6 +22,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.checkSelfPermission
+import androidx.core.view.isEmpty
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -30,6 +31,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import com.google.android.gms.location.*
 import com.woo.calendarapp.EventObserver
 import com.woo.calendarapp.KakaoRetrofit
+import com.woo.calendarapp.LoadingDialog
 import com.woo.calendarapp.kakaoApi.KakaoAPI
 import com.woo.calendarapp.R
 import com.woo.calendarapp.databinding.FragmentAddBinding
@@ -108,6 +110,8 @@ class AddFragment : Fragment() {
         }
 
 
+        getMap()
+
         binding.startDate.setOnClickListener {
             datePicker(0)
         }
@@ -171,7 +175,14 @@ class AddFragment : Fragment() {
 
 
         //keyword map
-        binding.keywordDelete.setOnClickListener {
+        binding.placeSwitch.setOnCheckedChangeListener { compoundButton, b ->
+            if(b){
+                binding.addKeywordMap.visibility = VISIBLE
+            }else{
+                binding.addKeywordMap.visibility = GONE
+            }
+        }
+        /*binding.switch.setOnClickListener {
             binding.addKeywordMap.visibility = GONE
             binding.deleteKeywordMap.visibility = VISIBLE
         }
@@ -179,13 +190,13 @@ class AddFragment : Fragment() {
             binding.deleteKeywordMap.visibility = GONE
             binding.addKeywordMap.visibility = VISIBLE
         }
-
-
-        getMap()
+*/
 
 
 
         binding.keywordSearch.setOnClickListener {
+            Log.e("addFragment", " ")
+
             binding.mapView.removeView(mapView)
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.main, AddMapFragment())
@@ -193,20 +204,49 @@ class AddFragment : Fragment() {
                 .commit()
         }
 
-        viewModel.updateKeywordMap.observe(requireActivity()) {
-            println(" addFragment updateKeywordMap   x : ${viewModel.getLocation()!!.first}  y : ${viewModel.getLocation()!!.second}")
+
+
+
+        viewModel.updateKeywordMap.observe(viewLifecycleOwner, EventObserver {
+            Log.e(" addFragment", " updateKeywordMap   x : ${viewModel.getLocation()!!.first}  y : ${viewModel.getLocation()!!.second}")
             mapLocation = Pair(viewModel.getLocation()!!.first, viewModel.getLocation()!!.second)
             moveMap(viewModel.getLocation()!!.first, viewModel.getLocation()!!.second)
-        }
 
+        })
 
 
         return binding.root
     }
 
+
+    override fun onStart() {
+        super.onStart()
+
+        if(binding.mapView.isEmpty()){
+            Log.e("onStart" , " addFragment")
+            getMap()
+        }
+
+
+
+
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+
+
+    }
+    override fun onStop() {
+        super.onStop()
+        binding.mapView.removeView(mapView)
+    }
+
     private fun hideKeyboard() {
         if (activity != null && requireActivity().currentFocus != null) {
-            // 프래그먼트기 때문에 getActivity() 사용
+
             val inputManager =
                 requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputManager.hideSoftInputFromWindow(
@@ -285,7 +325,9 @@ class AddFragment : Fragment() {
                 binding.etTitle.text.toString(),
                 binding.etContent.text.toString(),
                 bColor,
-                tColor
+                tColor,
+                mapLocation.first,
+                mapLocation.second
 
         )
         )
@@ -320,9 +362,6 @@ class AddFragment : Fragment() {
         println("@@ 주소 위도 경도 geoCode   ::   ${ScheduleUtils.geoCoding("경기도 수원시 영통구 망포2동 덕영대로 1400", requireActivity())}")
         // println("@@ 주소 위도 경도 getAddress    ::   ${ScheduleUtils.getAddress(geoCoding("경기도 수원시 영통구 망포2동 덕영대로 1400", requireActivity()))}")
 
-
-
-
         if (checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -342,11 +381,13 @@ class AddFragment : Fragment() {
                                   marker(location!!.latitude, location.longitude , "pick")*/
 
                         mapLocation = Pair(location!!.longitude, location!!.latitude)
+                        viewModel.setLocation(location!!.longitude, location!!.latitude)
                         moveMap(location!!.longitude, location!!.latitude)
 
                     }
             }else{
                 println(" getMap   x : ${mapLocation.first}  y : ${mapLocation.second}")
+
                 moveMap(mapLocation.first, mapLocation.second)
             }
 
@@ -375,14 +416,14 @@ class AddFragment : Fragment() {
     }
 
     fun moveMap( longitude:Double ,latitude:Double) {
+        Log.e("addFragment ", " move 1 ${mapLocation}")
+        Log.e("addFragment ", " move 2 ${viewModel.getLocation()}")
+        Log.e("addFragment ", " move 3 ${longitude}  $latitude")
         val mp = MapPoint.mapPointWithGeoCoord(latitude, longitude)
         mapView.setMapCenterPoint(mp, true)
         mapView.setZoomLevel(1, true)
         marker(latitude, longitude, "pick")
     }
-
-
-
 
 
 

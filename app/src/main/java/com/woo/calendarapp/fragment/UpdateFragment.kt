@@ -247,6 +247,9 @@ class UpdateFragment : Fragment() {
                 binding.etContent.text.toString(),
                 baColor,
                 txtColor,
+                // 나중에 수정해야할거
+                viewModel.getLocation()!!.first,
+                viewModel.getLocation()!!.second
 
             ),
             arguments?.getInt("id")!!.toInt()

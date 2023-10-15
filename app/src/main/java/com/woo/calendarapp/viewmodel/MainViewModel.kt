@@ -50,10 +50,14 @@ class MainViewModel @Inject constructor(
     }
     fun getLocation() = clickMapLocation.value
 
-    val _updateKeywordMap : MutableLiveData<EventObserver.Event<Boolean>> = MutableLiveData()
+
+
+    private val _updateKeywordMap : MutableLiveData<EventObserver.Event<Boolean>> = MutableLiveData()
     val updateKeywordMap : LiveData<EventObserver.Event<Boolean>> = _updateKeywordMap
 
-
+    fun updateClick() {
+        _updateKeywordMap.value = EventObserver.Event(true)
+    }
 
 
 
@@ -179,6 +183,7 @@ class MainViewModel @Inject constructor(
 
     fun addSchedule(schedule: Schedule) {
         Log.e("MainViewModel", " ")
+        Log.e("MainViewModel", " x: ${schedule.x}  y: ${schedule.y}")
         // Log.e("viemodel", " $s")
         //Log.e("viewModel", " $title  $barColor $textColor  $startDate   $endDate   $content ")
 

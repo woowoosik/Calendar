@@ -1,17 +1,24 @@
 package com.woo.calendarapp.bottomSheet
 
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import android.location.Location
+import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.woo.calendarapp.EventObserver
@@ -19,15 +26,27 @@ import com.woo.calendarapp.R
 import com.woo.calendarapp.databinding.BottomsheetChildBinding
 import com.woo.calendarapp.fragment.AddFragment
 import com.woo.calendarapp.fragment.UpdateFragment
-import com.woo.calendarapp.generated.callback.OnClickListener
 import com.woo.calendarapp.schedule.Schedule
+import com.woo.calendarapp.utils.ScheduleUtils
 import com.woo.calendarapp.viewmodel.MainViewModel
+import net.daum.mf.map.api.MapPOIItem
+import net.daum.mf.map.api.MapPoint
+import net.daum.mf.map.api.MapView
 
 
 class BottomSheetFragmentChild : BottomSheetDialogFragment() {
     private lateinit var mainViewModel : MainViewModel
     private lateinit var binding : BottomsheetChildBinding
     private lateinit var bottomSheetBehavior : BottomSheetBehavior<*>
+
+    // 카카오맵
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var mapView : MapView
+
+    private lateinit var mapLocation : Pair<Double,Double>
+
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +67,8 @@ class BottomSheetFragmentChild : BottomSheetDialogFragment() {
         binding.bottomChildContent.text=arguments?.getString("content")
         binding.bottomChildStartDate.text = arguments?.getString("start")
         binding.bottomChildEndDate.text = arguments?.getString("end")
+
+        mapLocation = Pair(arguments?.getDouble("x"), arguments?.getDouble("y")) as Pair<Double, Double>
 
         var bgShape : GradientDrawable = binding.bottomChildTitle.background as GradientDrawable
         arguments?.getInt("barColor")?.let { bgShape.setColor(it) }
@@ -81,6 +102,8 @@ class BottomSheetFragmentChild : BottomSheetDialogFragment() {
             println(" - ${arguments?.getInt("id")}")
             println(" - ${arguments?.getInt("barColor")}")
             println(" - ${arguments?.getInt("textColor")}")
+            println(" x ${arguments?.getDouble("x")}")
+            println(" y ${arguments?.getDouble("y")}")
             val bundle = Bundle()
             bundle.putInt("id", arguments?.getInt("id")!!.toInt())
             bundle.putString("start", arguments?.getString("start"))
@@ -97,10 +120,95 @@ class BottomSheetFragmentChild : BottomSheetDialogFragment() {
                 .commit()
         }
 
-
+        println("child : 들어가기 전 argu ${arguments?.getDouble("x")}  ${arguments?.getDouble("y")}")
+        println(" child : 들어가기 전 mapLocation ${mapLocation.first}, ${mapLocation.second} ")
+        getMap()
 
 
     }
+
+
+    fun marker(latitude:Double, longitude:Double , name:String){
+        val marker = MapPOIItem()
+
+        mapView.addPOIItem(marker)
+        //맵 포인트 위도경도 설정
+        //맵 포인트 위도경도 설정
+        val mapPoint = MapPoint.mapPointWithGeoCoord(latitude, longitude)
+        marker.itemName = name
+        marker.tag = 0
+        marker.mapPoint = mapPoint
+        marker.markerType = MapPOIItem.MarkerType.BluePin // 기본으로 제공하는 BluePin 마커 모양.
+
+
+        mapView.addPOIItem(marker)
+
+    }
+
+
+
+    fun getMap(){
+
+        mapView = MapView(requireActivity())
+        binding.mapView.addView(mapView)
+
+
+
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+
+            println(" permission if ")
+            if( !this::mapLocation.isInitialized ){
+                fusedLocationClient.lastLocation
+                    .addOnSuccessListener { location : Location? ->
+                        println(" location +-  ${location}")
+                        mapLocation = Pair(location!!.longitude, location!!.latitude)
+                        moveMap(location!!.longitude, location!!.latitude)
+
+                    }
+            }else{
+                println(" moveMap ${mapLocation.first}, ${mapLocation.second} ")
+                moveMap(mapLocation.first, mapLocation.second)
+            }
+        }else{
+            println(" permission else ")
+            val locationPermissionRequest = registerForActivityResult(
+                ActivityResultContracts.RequestMultiplePermissions()
+            ) { permissions ->
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    when {
+                        permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
+
+                        }
+                        permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
+
+                        } else -> {
+
+                    }
+                    }
+                }
+            }
+            locationPermissionRequest.launch(arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION))
+        }
+
+    }
+
+
+    fun moveMap( longitude:Double ,latitude:Double) {
+        val mp = MapPoint.mapPointWithGeoCoord(latitude, longitude)
+        mapView.setMapCenterPoint(mp, true)
+        mapView.setZoomLevel(1, true)
+        marker(latitude, longitude, "pick")
+    }
+
 
 
 
