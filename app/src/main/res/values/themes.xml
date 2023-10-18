@@ -30,4 +30,9 @@
     <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">@color/mainDateColor</item>
     </style>
+
+    <style name="Switch">
+        <item name="colorControlActivated">@color/line_text</item>
+    </style>
+
 </resources>

@@ -13,8 +13,9 @@ data class Schedule(
     var content : String,
     var scheduleBarColor : Int,
     var scheduleTextColor : Int,
-    var x:Double,
-    var y:Double
+    var x : Double,
+    var y : Double,
+    var isChecked : Boolean
 ){
     @PrimaryKey(autoGenerate = true) var id: Int = 0
 }

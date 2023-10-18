@@ -65,9 +65,9 @@ class BottomSheetFragment : BottomSheetDialogFragment(){
 
         adapter.setItemClickListener(object : BottomRecyclerAdapter.OnItemClickListener{
             override fun onItemClick(schedule: Schedule) {
-                println("$${schedule.title}  ${schedule.content}  ${schedule.scheduleBarColor}")
+                println("${schedule.title}  ${schedule.content}  ${schedule.scheduleBarColor}")
 
-                println("x  ${schedule.x}  y  ${schedule.y}  ")
+                println(" isChecked ${schedule.isChecked}    x  ${schedule.x}  y  ${schedule.y}  ")
                 // bottomSheetFragment.show(childFragmentManager, "bottomsheet")
                 val bottomSheetFragmentChild = BottomSheetFragmentChild()
                 val bundle = Bundle()
@@ -78,8 +78,11 @@ class BottomSheetFragment : BottomSheetDialogFragment(){
                 bundle.putString("content", schedule.content)
                 bundle.putInt("barColor", schedule.scheduleBarColor)
                 bundle.putInt("textColor", schedule.scheduleTextColor)
-                bundle.putDouble("x", schedule.x)
-                bundle.putDouble("y", schedule.y)
+                bundle.putBoolean("isChecked", schedule.isChecked)
+                if(schedule.isChecked){
+                    bundle.putDouble("x", schedule.x)
+                    bundle.putDouble("y", schedule.y)
+                }
                 bottomSheetFragmentChild.arguments = bundle
                 activity?.let { it1 -> bottomSheetFragmentChild.show(it1.supportFragmentManager, bottomSheetFragmentChild.tag) }
             }
@@ -176,7 +179,6 @@ class BottomSheetFragment : BottomSheetDialogFragment(){
         }
 
     }
-
 
 
 

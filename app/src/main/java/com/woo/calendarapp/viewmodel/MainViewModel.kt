@@ -79,6 +79,12 @@ class MainViewModel @Inject constructor(
     private val _updateOpen : MutableLiveData<EventObserver.Event<Boolean>> = MutableLiveData()
     val updateOpen : LiveData<EventObserver.Event<Boolean>> = _updateOpen
 
+    fun updateOpen(){
+        _updateOpen.postValue(EventObserver.Event(true))
+    }
+
+
+
     private val _searchKeyword : MutableLiveData<EventObserver.Event<Boolean>> = MutableLiveData()
     val searchKeyword : LiveData<EventObserver.Event<Boolean>> = _searchKeyword
 
@@ -157,14 +163,13 @@ class MainViewModel @Inject constructor(
     }
 
 
-    fun updateOpen(){
-        _updateOpen.postValue(EventObserver.Event(true))
-    }
+
     fun updateSchedule(schedule: Schedule, id:Int){
 
         println("updateSchedule : id :${id}")
         println("updateSchedule : id :${schedule.id}")
         println("updateSchedule : ${schedule}")
+        println("updateSchedule : ${schedule.isChecked}")
         viewModelScope.launch(Dispatchers.IO) { //코루틴
 
             // 활성화 dispatcherIO는 백그라운드에서 실행
@@ -183,7 +188,7 @@ class MainViewModel @Inject constructor(
 
     fun addSchedule(schedule: Schedule) {
         Log.e("MainViewModel", " ")
-        Log.e("MainViewModel", " x: ${schedule.x}  y: ${schedule.y}")
+        Log.e("MainViewModel", " isChecked: ${schedule.isChecked}  x: ${schedule.x}  y: ${schedule.y} ")
         // Log.e("viemodel", " $s")
         //Log.e("viewModel", " $title  $barColor $textColor  $startDate   $endDate   $content ")
 

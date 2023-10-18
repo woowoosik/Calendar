@@ -9,25 +9,27 @@ import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.isEmpty
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.woo.calendarapp.EventObserver
 import com.woo.calendarapp.R
 import com.woo.calendarapp.databinding.BottomsheetChildBinding
-import com.woo.calendarapp.fragment.AddFragment
 import com.woo.calendarapp.fragment.UpdateFragment
-import com.woo.calendarapp.schedule.Schedule
-import com.woo.calendarapp.utils.ScheduleUtils
 import com.woo.calendarapp.viewmodel.MainViewModel
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
@@ -53,6 +55,9 @@ class BottomSheetFragmentChild : BottomSheetDialogFragment() {
 
         mainViewModel = ViewModelProvider(activity as ViewModelStoreOwner)[MainViewModel::class.java]
 
+
+        mapLocation = Pair(arguments?.getDouble("x"), arguments?.getDouble("y")) as Pair<Double, Double>
+
     }
 
     override fun onCreateView(
@@ -68,7 +73,10 @@ class BottomSheetFragmentChild : BottomSheetDialogFragment() {
         binding.bottomChildStartDate.text = arguments?.getString("start")
         binding.bottomChildEndDate.text = arguments?.getString("end")
 
-        mapLocation = Pair(arguments?.getDouble("x"), arguments?.getDouble("y")) as Pair<Double, Double>
+        Log.e("framgnet Child ", " ${arguments?.getDouble("x")}  ${arguments?.getDouble("y")}")
+        Log.e("framgnet Child ", "${arguments?.getBoolean("isChecked")}")
+
+
 
         var bgShape : GradientDrawable = binding.bottomChildTitle.background as GradientDrawable
         arguments?.getInt("barColor")?.let { bgShape.setColor(it) }
@@ -87,13 +95,15 @@ class BottomSheetFragmentChild : BottomSheetDialogFragment() {
 
 
 
-
         return binding.root
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        val updateFragment = UpdateFragment()
 
         binding.bottomChildUpdate.setOnClickListener {
             bottomSheetBehavior!!.state = BottomSheetBehavior.STATE_HIDDEN
@@ -112,18 +122,35 @@ class BottomSheetFragmentChild : BottomSheetDialogFragment() {
             bundle.putString("content", arguments?.getString("content"))
             bundle.putInt("barColor", arguments?.getInt("barColor")!!.toInt())
             bundle.putInt("textColor", arguments?.getInt("textColor")!!.toInt())
-            val updateFragment = UpdateFragment()
+            bundle.putBoolean("isChecked", arguments?.getBoolean("isChecked")!!)
+            if(arguments?.getBoolean("isChecked")!!){
+                bundle.putDouble("x", arguments?.getDouble("x")!!)
+                bundle.putDouble("y", arguments?.getDouble("y")!!)
+            }
             updateFragment.arguments = bundle
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.main, updateFragment)
                 .addToBackStack(null)
                 .commit()
+
+            binding.mapView.removeAllViews()
+
         }
+
+
 
         println("child : 들어가기 전 argu ${arguments?.getDouble("x")}  ${arguments?.getDouble("y")}")
         println(" child : 들어가기 전 mapLocation ${mapLocation.first}, ${mapLocation.second} ")
+
         getMap()
 
+        println(" child : isChecked  ${arguments?.getBoolean("isChecked")} ")
+        if(arguments?.getBoolean("isChecked") == true){
+            mapView.visibility = View.VISIBLE
+        }else{
+            mapView.visibility = View.GONE
+
+        }
 
     }
 
@@ -148,11 +175,8 @@ class BottomSheetFragmentChild : BottomSheetDialogFragment() {
 
 
     fun getMap(){
-
         mapView = MapView(requireActivity())
         binding.mapView.addView(mapView)
-
-
 
         if (ContextCompat.checkSelfPermission(
                 requireContext(),
@@ -164,18 +188,15 @@ class BottomSheetFragmentChild : BottomSheetDialogFragment() {
         ) {
 
             println(" permission if ")
-            if( !this::mapLocation.isInitialized ){
+            if (!this::mapLocation.isInitialized ) {
                 fusedLocationClient.lastLocation
-                    .addOnSuccessListener { location : Location? ->
+                    .addOnSuccessListener { location: Location? ->
                         println(" location +-  ${location}")
                         mapLocation = Pair(location!!.longitude, location!!.latitude)
-                        moveMap(location!!.longitude, location!!.latitude)
 
                     }
-            }else{
-                println(" moveMap ${mapLocation.first}, ${mapLocation.second} ")
-                moveMap(mapLocation.first, mapLocation.second)
             }
+
         }else{
             println(" permission else ")
             val locationPermissionRequest = registerForActivityResult(
@@ -194,10 +215,14 @@ class BottomSheetFragmentChild : BottomSheetDialogFragment() {
                     }
                 }
             }
+
             locationPermissionRequest.launch(arrayOf(
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION))
         }
+
+        Log.e("Fragment child", "${mapLocation.first}, ${mapLocation.second} ")
+        moveMap(mapLocation.first, mapLocation.second)
 
     }
 
@@ -212,27 +237,53 @@ class BottomSheetFragmentChild : BottomSheetDialogFragment() {
 
 
 
-override fun onStart() {
-    super.onStart()
+    override fun onStart() {
+        super.onStart()
+        if(binding.mapView.isEmpty()){
+            Log.e("onStart" , " addFragment")
 
-    // full screen
-    if (dialog != null) {
-        val bottomSheet: View = dialog!!.findViewById(com.google.android.material.R.id.design_bottom_sheet)
-        val dHeight = resources.displayMetrics.heightPixels
-        bottomSheet.layoutParams.height = dHeight *9/10
+            binding.mapView.removeAllViews()
+            getMap()
+        }
+        // full screen
+        if (dialog != null) {
+            val bottomSheet: View = dialog!!.findViewById(com.google.android.material.R.id.design_bottom_sheet)
+            val dHeight = resources.displayMetrics.heightPixels
+            bottomSheet.layoutParams.height = dHeight *9/10
+        }
+
+        val view = view
+        view!!.post{
+            val parent = view!!.parent as View
+            val params = parent.layoutParams as CoordinatorLayout.LayoutParams
+            val behavior = params.behavior
+            bottomSheetBehavior = behavior as BottomSheetBehavior<*>
+            bottomSheetBehavior!!.peekHeight = view!!.measuredHeight
+            parent.setBackgroundColor(Color.TRANSPARENT)
+        }
     }
 
-    val view = view
-    view!!.post{
-        val parent = view!!.parent as View
-        val params = parent.layoutParams as CoordinatorLayout.LayoutParams
-        val behavior = params.behavior
-        bottomSheetBehavior = behavior as BottomSheetBehavior<*>
-        bottomSheetBehavior!!.peekHeight = view!!.measuredHeight
-        parent.setBackgroundColor(Color.TRANSPARENT)
-    }
-}
 
+    override fun onStop() {
+        super.onStop()
+        Log.e("onStop","FragmentChild")
+        // binding.mapView.removeView(mapView)
+    }
+
+    override fun onPause() {
+        Log.e("onPause","FragmentChild")
+        super.onPause()
+    }
+
+    override fun onResume() {
+        Log.e("onResume","FragmentChild")
+        super.onResume()
+    }
+
+    override fun onDestroyView() {
+        Log.e("onDestroyView","FragmentChild")
+        super.onDestroyView()
+    }
 
 
 }

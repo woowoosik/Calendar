@@ -233,6 +233,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:paddingEnd="15dp"
+                    android:theme="@style/Switch"
                     app:layout_constraintTop_toBottomOf="@+id/et_content"
                     app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -255,6 +256,7 @@
                        android:layout_height="wrap_content"
                        app:layout_constraintTop_toTopOf="parent"
                        app:layout_constraintEnd_toEndOf="parent"
+                       android:background="@drawable/button"
                        android:gravity="center"
                        android:textSize="10dp"
                        android:textStyle="bold"

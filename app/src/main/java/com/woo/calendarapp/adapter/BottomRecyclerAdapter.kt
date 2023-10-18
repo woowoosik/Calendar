@@ -48,7 +48,7 @@ class BottomRecyclerAdapter(private var list : MutableList<Schedule>)
 
         Log.e(" onBinsViewHolder", " ${list[position].title}  ${list[position].content}")
 
-        Log.e(" onBinsViewHolder", "x ${list[position].x}  y ${list[position].y}")
+        Log.e(" onBinsViewHolder", "x ${list[position].isChecked} ${list[position].x}  y ${list[position].y}")
         holder.binding.itemTitle.text = list[position].title
         holder.binding.itemContent.text = list[position].content
         var bgShape : GradientDrawable = binding.itemBar.background as GradientDrawable

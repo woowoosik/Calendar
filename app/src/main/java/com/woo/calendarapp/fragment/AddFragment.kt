@@ -18,6 +18,7 @@ import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
@@ -174,14 +175,7 @@ class AddFragment : Fragment() {
         binding.layout.isClickable = true
 
 
-        //keyword map
-        binding.placeSwitch.setOnCheckedChangeListener { compoundButton, b ->
-            if(b){
-                binding.addKeywordMap.visibility = VISIBLE
-            }else{
-                binding.addKeywordMap.visibility = GONE
-            }
-        }
+
         /*binding.switch.setOnClickListener {
             binding.addKeywordMap.visibility = GONE
             binding.deleteKeywordMap.visibility = VISIBLE
@@ -195,7 +189,8 @@ class AddFragment : Fragment() {
 
 
         binding.keywordSearch.setOnClickListener {
-            Log.e("addFragment", " ")
+            Log.e("addFragment", "")
+
 
             binding.mapView.removeView(mapView)
             requireActivity().supportFragmentManager.beginTransaction()
@@ -226,17 +221,19 @@ class AddFragment : Fragment() {
             Log.e("onStart" , " addFragment")
             getMap()
         }
-
-
-
-
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+        //keyword map
+        binding.placeSwitch.setOnCheckedChangeListener { _, b ->
+            if(b){
+                binding.addKeywordMap.visibility = VISIBLE
+            }else{
+                binding.addKeywordMap.visibility = GONE
+            }
+        }
 
     }
     override fun onStop() {
@@ -327,7 +324,8 @@ class AddFragment : Fragment() {
                 bColor,
                 tColor,
                 mapLocation.first,
-                mapLocation.second
+                mapLocation.second,
+                binding.placeSwitch.isChecked
 
         )
         )
