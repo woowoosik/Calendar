@@ -35,4 +35,9 @@
         <item name="colorControlActivated">@color/line_text</item>
     </style>
 
+    <style name="EditTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorAccent">@color/editText</item>
+    </style>
+
+
 </resources>

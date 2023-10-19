@@ -13,12 +13,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <EditText
+       <!-- <EditText
             android:id="@+id/et_map_search"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@null"
-            android:hint="키워드, 주소"
+            android:hint="키워드"
             android:imeOptions="actionDone"
             android:inputType="text"
             android:maxLines="1"
@@ -28,6 +27,40 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+-->
+        <LinearLayout
+            android:id="@+id/et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@id/buttonll"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <EditText
+                android:id="@+id/et_map_search"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null"
+                android:theme="@style/EditTheme"
+                android:hint="키워드"
+                android:padding="8dp"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:maxLines="1" />
+
+            <ImageView
+                android:id="@+id/bt_map_search"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="5dp"
+                android:src="@drawable/ic_baseline_search_24" />
+        </LinearLayout>
+
+<!--
+
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guide_line"
@@ -35,8 +68,9 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.85" />
+-->
 
-        <ImageView
+      <!--  <ImageView
             android:id="@+id/bt_map_search"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -45,7 +79,7 @@
             app:layout_constraintStart_toEndOf="@+id/guide_line"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/buttonll"
-            />
+            />-->
 
 
         <!--<RadioGroup
@@ -84,7 +118,7 @@
             android:layout_height="0dp"
             android:orientation="horizontal"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/et_map_search">
+            app:layout_constraintTop_toBottomOf="@+id/et">
 
             <Button
                 android:id="@+id/bt_place"
@@ -94,7 +128,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 android:background="@drawable/button"
                 android:text="현재 위치"
-                android:textSize="10dp"
+                android:textSize="15dp"
                 android:textStyle="bold"
                 android:orientation="horizontal"/>
 

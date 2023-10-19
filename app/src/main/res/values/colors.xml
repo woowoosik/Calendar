@@ -27,4 +27,7 @@
     <color name="recyclerItemTextColor">#FF796F</color>
 
 
+    <color name="editText">#FD9B95</color>
+
+
 </resources>

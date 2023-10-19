@@ -13,6 +13,8 @@
         <entry key="app/src/main/res/drawable/bottom_sheet_corner.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/button.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/button_circle.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/cursor.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/edittext.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_baseline_clear_24.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_baseline_edit_calendar_24.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.1" />
@@ -42,7 +44,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_16" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17_PREVIEW" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

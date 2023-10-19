@@ -19,10 +19,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isEmpty
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
-import androidx.fragment.app.createViewModelLazy
+import androidx.fragment.app.*
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -37,6 +34,7 @@ import com.woo.calendarapp.databinding.FragmentAddMapBinding
 import com.woo.calendarapp.schedule.Schedule
 import com.woo.calendarapp.utils.ScheduleUtils
 import com.woo.calendarapp.viewmodel.MainViewModel
+import kotlinx.coroutines.delay
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
@@ -98,16 +96,21 @@ class AddMapFragment : Fragment(){
            // viewModel.searchKeyword("은행")
         }
 
+
         viewModel.searchKeyword.observe(viewLifecycleOwner, EventObserver {
+
 
 
             println("searchKeyword observe ")
             println("${viewModel.getSearchKeyList().documents.size}")
 
+
            val bottomSheetAddMap = BottomSheetAddMap()
             bottomSheetAddMap.show(requireActivity().supportFragmentManager, bottomSheetAddMap.tag)
 
+
         })
+
 
 
         binding.btPlace.setOnClickListener {
@@ -172,7 +175,6 @@ class AddMapFragment : Fragment(){
         if(binding.etMapSearch.text.toString() == ""){
             Toast.makeText(requireContext(),
                 "검색 키워드를 입력해주세요.", Toast.LENGTH_SHORT).show()
-
         }else{
             viewModel.searchKeyword(binding.etMapSearch.text.toString())
             // viewModel.searchKeyword("은행")
@@ -326,7 +328,6 @@ class AddMapFragment : Fragment(){
 
         Log.e("addMapFragment", "onStop ${viewModel.updateKeywordMap.value.toString()} ")
     }
-
 
 
 

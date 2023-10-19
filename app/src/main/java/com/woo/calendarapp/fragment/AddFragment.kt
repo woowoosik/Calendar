@@ -18,7 +18,6 @@ import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
@@ -31,9 +30,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.google.android.gms.location.*
 import com.woo.calendarapp.EventObserver
-import com.woo.calendarapp.KakaoRetrofit
-import com.woo.calendarapp.LoadingDialog
-import com.woo.calendarapp.kakaoApi.KakaoAPI
 import com.woo.calendarapp.R
 import com.woo.calendarapp.databinding.FragmentAddBinding
 import com.woo.calendarapp.schedule.Schedule
@@ -44,11 +40,6 @@ import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
 import org.joda.time.DateTime
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import yuku.ambilwarna.AmbilWarnaDialog
 import java.util.*
 
@@ -193,10 +184,13 @@ class AddFragment : Fragment() {
 
 
             binding.mapView.removeView(mapView)
+
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.main, AddMapFragment())
                 .addToBackStack(null)
                 .commit()
+
+
         }
 
 

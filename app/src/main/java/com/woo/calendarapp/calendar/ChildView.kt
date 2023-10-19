@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
+import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.util.Log
@@ -64,6 +65,7 @@ class ChildView @JvmOverloads constructor(
         println(" child text:  ${schedulebar.scheduleTextColor}")
 
         binding.childTv.setSingleLine()
+
 
         bgShape.setColor(schedulebar.scheduleBarColor)
 
