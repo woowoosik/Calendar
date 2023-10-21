@@ -36,6 +36,7 @@ import com.woo.calendarapp.schedule.Schedule
 import com.woo.calendarapp.utils.ScheduleUtils
 import com.woo.calendarapp.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.channels.ticker
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
@@ -60,11 +61,19 @@ class AddFragment : Fragment() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var mapView : MapView
 
-
     private lateinit var mapLocation : Pair<Double,Double>
 
+    private lateinit var startDate :String
+    private lateinit var endDate :String
 
     private val cal = Calendar.getInstance()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+
+
+    }
 
     @RequiresApi(Build.VERSION_CODES.N)
     @SuppressLint("ResourceAsColor")
@@ -72,14 +81,28 @@ class AddFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
-
         viewModel =  ViewModelProvider(activity as ViewModelStoreOwner)[MainViewModel::class.java]
 
         binding =  DataBindingUtil.inflate(inflater, R.layout.fragment_add, container, false)
         binding.mainViewModel = viewModel
         binding.fragment = this@AddFragment
+
+
+
+
+        return binding.root
+    }
+
+
+
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+
+        val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
+
 
         addSchedulebar = binding.addSchedulebar.background as GradientDrawable
         barColor = binding.barColor.background as GradientDrawable
@@ -90,26 +113,50 @@ class AddFragment : Fragment() {
         //kakao map
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
-        if(arguments?.getString("start") == null){
-            binding.startDate.text = DateTime.now().toString("yyyy-MM-dd")
-        }else{
-            binding.startDate.text = arguments?.getString("start")
+        /*  if(arguments?.getString("start") == null){
+              binding.startDate.text = DateTime.now().toString("yyyy-MM-dd")
+          }else{
+              binding.startDate.text = arguments?.getString("start")
+          }
+          if(arguments?.getString("end") == null){
+              binding.endDate.text = DateTime.now().toString("yyyy-MM-dd")
+          }else{
+              binding.endDate.text = arguments?.getString("end")
+          }
+  */
+
+
+        if(!this::startDate.isInitialized){
+            startDate =
+                if(arguments?.getString("start") == null){
+                    DateTime.now().toString("yyyy-MM-dd")
+                }else{
+                    arguments?.getString("start")!!
+                }
         }
-        if(arguments?.getString("end") == null){
-            binding.endDate.text = DateTime.now().toString("yyyy-MM-dd")
-        }else{
-            binding.endDate.text = arguments?.getString("end")
+
+        if(!this::endDate.isInitialized){
+            endDate = if (arguments?.getString("end") == null) {
+                DateTime.now().toString("yyyy-MM-dd")
+            } else {
+                arguments?.getString("end")!!
+            }
         }
+
+        binding.startDate.text = startDate
+        binding.endDate.text = endDate
 
 
         getMap()
 
         binding.startDate.setOnClickListener {
             datePicker(0)
+            Log.e("startDate ", " ${startDate}  ${binding.startDate.text.toString()}")
         }
 
         binding.endDate.setOnClickListener {
             datePicker(1)
+            Log.e("endDate ", " ${endDate}  ${binding.endDate.text.toString()}")
         }
 
 
@@ -182,7 +229,7 @@ class AddFragment : Fragment() {
         binding.keywordSearch.setOnClickListener {
             Log.e("addFragment", "")
 
-
+            Log.e(" keywordSearch text"," ${startDate} ${endDate}")
             binding.mapView.removeView(mapView)
 
             requireActivity().supportFragmentManager.beginTransaction()
@@ -195,7 +242,6 @@ class AddFragment : Fragment() {
 
 
 
-
         viewModel.updateKeywordMap.observe(viewLifecycleOwner, EventObserver {
             Log.e(" addFragment", " updateKeywordMap   x : ${viewModel.getLocation()!!.first}  y : ${viewModel.getLocation()!!.second}")
             mapLocation = Pair(viewModel.getLocation()!!.first, viewModel.getLocation()!!.second)
@@ -204,8 +250,22 @@ class AddFragment : Fragment() {
         })
 
 
-        return binding.root
+
+
+        //keyword map
+        binding.placeSwitch.setOnCheckedChangeListener { _, b ->
+            if(b){
+                binding.addKeywordMap.visibility = VISIBLE
+            }else{
+                binding.addKeywordMap.visibility = GONE
+            }
+        }
+
+
+
+
     }
+
 
 
     override fun onStart() {
@@ -217,19 +277,9 @@ class AddFragment : Fragment() {
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
-        //keyword map
-        binding.placeSwitch.setOnCheckedChangeListener { _, b ->
-            if(b){
-                binding.addKeywordMap.visibility = VISIBLE
-            }else{
-                binding.addKeywordMap.visibility = GONE
-            }
-        }
 
-    }
+
     override fun onStop() {
         super.onStop()
         binding.mapView.removeView(mapView)
@@ -282,28 +332,43 @@ class AddFragment : Fragment() {
                 binding.endDate.text = "$year-${String.format("%02d", month+1)}-${String.format("%02d", dayOfMonth)}"
             }else{
                 when(b){
-                    0 ->  binding.startDate.text = "$year-${String.format("%02d", month+1)}-${String.format("%02d", dayOfMonth)}"
-                    else ->  binding.endDate.text = "$year-${String.format("%02d", month+1)}-${String.format("%02d", dayOfMonth)}"
+                    0 -> {
+                        binding.startDate.text = "$year-${String.format("%02d", month+1)}-${String.format("%02d", dayOfMonth)}"
+                        this.startDate = binding.startDate.text.toString()
+                    }
+                    else -> {
+                        binding.endDate.text = "$year-${String.format("%02d", month+1)}-${String.format("%02d", dayOfMonth)}"
+                        this.endDate = binding.endDate.text.toString()
+                    }
                 }
             }
         }
 
         when(b){
-            0 ->  DatePickerDialog(requireActivity(),
-                R.style.DialogTheme,
-                dateSetListener,
-                startDate.toString("yyyy").toInt() ,
-                startDate.toString("M").toInt()-1,
-                startDate.toString("dd").toInt()
-            ).show()
-            else ->  DatePickerDialog(requireActivity(),
-                R.style.DialogTheme,
-                dateSetListener,
-                endDate.toString("yyyy").toInt() ,
-                endDate.toString("M").toInt()-1,
-                endDate.toString("dd").toInt()
-            ).show()
+            0 -> {
+                DatePickerDialog(
+                    requireActivity(),
+                    R.style.DialogTheme,
+                    dateSetListener,
+                    startDate.toString("yyyy").toInt(),
+                    startDate.toString("M").toInt() - 1,
+                    startDate.toString("dd").toInt()
+                ).show()
+
+
+            }
+            else -> {
+                DatePickerDialog(
+                    requireActivity(),
+                    R.style.DialogTheme,
+                    dateSetListener,
+                    endDate.toString("yyyy").toInt(),
+                    endDate.toString("M").toInt() - 1,
+                    endDate.toString("dd").toInt()
+                ).show()
+            }
         }
+
     }
 
     fun addSchedule()  {
@@ -346,14 +411,54 @@ class AddFragment : Fragment() {
 
 
 
+    @SuppressLint("MissingPermission")
     fun getMap(){
 
         mapView = MapView(requireActivity())
         binding.mapView.addView(mapView)
-
+/*
         println("@@ 주소 위도 경도 geoCode   ::   ${ScheduleUtils.geoCoding("경기도 수원시 영통구 망포2동 덕영대로 1400", requireActivity())}")
         // println("@@ 주소 위도 경도 getAddress    ::   ${ScheduleUtils.getAddress(geoCoding("경기도 수원시 영통구 망포2동 덕영대로 1400", requireActivity()))}")
 
+        val triple = KakaoMapUtils.kakaoMapPermission(requireActivity())
+        Log.e("getMap", "${triple}")
+        Log.e("getMap", "${!this::mapLocation.isInitialized} ")
+        if(triple.first){
+            if( !this::mapLocation.isInitialized ){
+                fusedLocationClient.lastLocation
+                    .addOnSuccessListener { location : Location? ->
+                        println(" location +-  ${location}")
+
+                        mapLocation = Pair(location!!.longitude, location!!.latitude)
+                        viewModel.setLocation(location!!.longitude, location!!.latitude)
+                        KakaoMapUtils.moveMap(location!!.longitude, location!!.latitude, mapView)
+
+                    }
+
+            }else{
+                KakaoMapUtils.moveMap(mapLocation.first, mapLocation.second, mapView)
+            }
+        }else{
+            val locationPermissionRequest = registerForActivityResult(
+                ActivityResultContracts.RequestMultiplePermissions()
+            ) { permissions ->
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    when {
+                        permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
+
+                        }
+                        permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
+
+                        } else -> {
+
+                    }
+                    }
+                }
+            }
+            locationPermissionRequest.launch(arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION))
+        }*/
         if (checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -367,10 +472,7 @@ class AddFragment : Fragment() {
                 fusedLocationClient.lastLocation
                     .addOnSuccessListener { location : Location? ->
                         println(" location +-  ${location}")
-                        /*          val mp = MapPoint.mapPointWithGeoCoord(location!!.latitude, location.longitude)
-                                  mapView.setMapCenterPoint(mp, true)
-                                  mapView.setZoomLevel(1, true)
-                                  marker(location!!.latitude, location.longitude , "pick")*/
+
 
                         mapLocation = Pair(location!!.longitude, location!!.latitude)
                         viewModel.setLocation(location!!.longitude, location!!.latitude)
@@ -405,7 +507,9 @@ class AddFragment : Fragment() {
                 Manifest.permission.ACCESS_COARSE_LOCATION))
         }
 
-    }
+
+
+    }   // getMap()
 
     fun moveMap( longitude:Double ,latitude:Double) {
         Log.e("addFragment ", " move 1 ${mapLocation}")
@@ -416,6 +520,8 @@ class AddFragment : Fragment() {
         mapView.setZoomLevel(1, true)
         marker(latitude, longitude, "pick")
     }
+
+
 
 
 

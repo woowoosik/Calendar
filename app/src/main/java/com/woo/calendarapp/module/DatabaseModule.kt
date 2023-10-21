@@ -26,12 +26,12 @@ class DatabaseModule {
             ScheduleDatabase::class.java,
             "scheduleDB")
             .addMigrations(
-                /*object:Migration(1,2){
+                object:Migration(1,2){
                     override fun migrate(database: SupportSQLiteDatabase) {
                         database.execSQL("ALTER TABLE SCHEDULE ADD COLUMN 'x' DOUBLE NOT NULL default 0.0")
                         database.execSQL("ALTER TABLE SCHEDULE ADD COLUMN 'y' DOUBLE NOT NULL default 0.0")
                     }
-                }*/
+                },
                 object:Migration(2,3){
                         override fun migrate(database: SupportSQLiteDatabase) {
 
