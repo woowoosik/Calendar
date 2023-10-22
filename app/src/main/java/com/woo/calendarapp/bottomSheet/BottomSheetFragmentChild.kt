@@ -2,6 +2,7 @@ package com.woo.calendarapp.bottomSheet
 
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
@@ -26,10 +27,13 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.snackbar.Snackbar
 import com.woo.calendarapp.EventObserver
+import com.woo.calendarapp.PermissionCheck
 import com.woo.calendarapp.R
 import com.woo.calendarapp.databinding.BottomsheetChildBinding
 import com.woo.calendarapp.fragment.UpdateFragment
+import com.woo.calendarapp.kakaoApi.KakaoMapUtils
 import com.woo.calendarapp.viewmodel.MainViewModel
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
@@ -49,6 +53,7 @@ class BottomSheetFragmentChild : BottomSheetDialogFragment() {
 
 
 
+    private lateinit var permissionCheck : PermissionCheck
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +63,8 @@ class BottomSheetFragmentChild : BottomSheetDialogFragment() {
 
         mapLocation = Pair(arguments?.getDouble("x"), arguments?.getDouble("y")) as Pair<Double, Double>
 
+
+        permissionCheck = PermissionCheck(requireActivity())
     }
 
     override fun onCreateView(
@@ -155,7 +162,7 @@ class BottomSheetFragmentChild : BottomSheetDialogFragment() {
     }
 
 
-    fun marker(latitude:Double, longitude:Double , name:String){
+   /* fun marker(latitude:Double, longitude:Double , name:String){
         val marker = MapPOIItem()
 
         mapView.addPOIItem(marker)
@@ -234,7 +241,43 @@ class BottomSheetFragmentChild : BottomSheetDialogFragment() {
         marker(latitude, longitude, "pick")
     }
 
+*/
 
+    @SuppressLint("MissingPermission")
+    fun getMap(){
+        mapView = MapView(requireActivity())
+        binding.mapView.addView(mapView)
+
+        if (permissionCheck.isAllPermissionsGranted()) {
+            if( !this::mapLocation.isInitialized ){
+                fusedLocationClient.lastLocation
+                    .addOnSuccessListener { location : Location? ->
+                        mapLocation = Pair(location!!.longitude, location!!.latitude)
+                    }
+            }else{
+                KakaoMapUtils.moveMap(mapLocation.first, mapLocation.second, mapView)
+            }
+
+        } else {
+            requestPermissionLauncher.launch(permissionCheck.permission)
+        }
+    }
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            permissions.entries.forEach { permission ->
+                when {
+                    permission.value -> {
+                        Snackbar.make(binding.root, "설정에서 권한을 허용해주세요. ", Snackbar.LENGTH_SHORT).show()
+                    }
+                    shouldShowRequestPermissionRationale(permission.key) -> {
+                        Snackbar.make(binding.root,
+                            "권한설정 확인", Snackbar.LENGTH_SHORT).show()
+                    }
+                    else -> Snackbar.make(binding.root, "권한이 거절되어있습니다. 설정에서 허용해주세요.", Snackbar.LENGTH_SHORT).show()
+                }
+            }
+        }
 
 
     override fun onStart() {
@@ -261,28 +304,6 @@ class BottomSheetFragmentChild : BottomSheetDialogFragment() {
             bottomSheetBehavior!!.peekHeight = view!!.measuredHeight
             parent.setBackgroundColor(Color.TRANSPARENT)
         }
-    }
-
-
-    override fun onStop() {
-        super.onStop()
-        Log.e("onStop","FragmentChild")
-        // binding.mapView.removeView(mapView)
-    }
-
-    override fun onPause() {
-        Log.e("onPause","FragmentChild")
-        super.onPause()
-    }
-
-    override fun onResume() {
-        Log.e("onResume","FragmentChild")
-        super.onResume()
-    }
-
-    override fun onDestroyView() {
-        Log.e("onDestroyView","FragmentChild")
-        super.onDestroyView()
     }
 
 

@@ -20,13 +20,14 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isEmpty
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.*
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.woo.calendarapp.EventObserver
 import com.woo.calendarapp.LoadingDialog
-import com.woo.calendarapp.LoadingDialogInterface
 import com.woo.calendarapp.R
 import com.woo.calendarapp.adapter.BottomRecyclerAdapter
 import com.woo.calendarapp.bottomSheet.BottomSheetAddMap
@@ -39,7 +40,7 @@ import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
 
-class AddMapFragment : Fragment(){
+class AddMapFragment : Fragment() {
 
     private lateinit var binding : FragmentAddMapBinding
     private lateinit var viewModel: MainViewModel
@@ -51,6 +52,7 @@ class AddMapFragment : Fragment(){
     private lateinit var mapLocation : Pair<Double,Double>
 
 
+    private lateinit var loadingDialog: LoadingDialog
 
 /*
 
@@ -79,7 +81,7 @@ class AddMapFragment : Fragment(){
         //kakao map
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
-
+        loadingDialog = LoadingDialog(requireActivity())
 
 
         getMap()
@@ -105,8 +107,19 @@ class AddMapFragment : Fragment(){
             println("${viewModel.getSearchKeyList().documents.size}")
 
 
+
            val bottomSheetAddMap = BottomSheetAddMap()
+
             bottomSheetAddMap.show(requireActivity().supportFragmentManager, bottomSheetAddMap.tag)
+
+            bottomSheetAddMap.lifecycle.addObserver(LifecycleEventObserver { source, event ->
+                if( event == Lifecycle.Event.ON_PAUSE){
+                Log.e("addMapFramgnet", "ON_PAUSE dismiss")
+                loadingDialog.dismiss()
+            }
+            })
+
+
 
 
         })
@@ -172,9 +185,11 @@ class AddMapFragment : Fragment(){
 
     fun searchKeyword(){
         println("검색버튼 클릭")
+        loadingDialog.show()
         if(binding.etMapSearch.text.toString() == ""){
             Toast.makeText(requireContext(),
                 "검색 키워드를 입력해주세요.", Toast.LENGTH_SHORT).show()
+            loadingDialog.dismiss()
         }else{
             viewModel.searchKeyword(binding.etMapSearch.text.toString())
             // viewModel.searchKeyword("은행")
@@ -203,6 +218,8 @@ class AddMapFragment : Fragment(){
 
 
 
+
+
     fun marker(latitude:Double, longitude:Double , name:String){
         val marker = MapPOIItem()
 
@@ -226,11 +243,6 @@ class AddMapFragment : Fragment(){
 
         mapView = MapView(requireActivity())
         binding.addMapView.addView(mapView)
-
-        println("@@ 주소 위도 경도 geoCode   ::   ${ScheduleUtils.geoCoding("경기도 수원시 영통구 망포2동 덕영대로 1400", requireActivity())}")
-        // println("@@ 주소 위도 경도 getAddress    ::   ${ScheduleUtils.getAddress(geoCoding("경기도 수원시 영통구 망포2동 덕영대로 1400", requireActivity()))}")
-
-
 
 
         if (ContextCompat.checkSelfPermission(
@@ -323,11 +335,14 @@ class AddMapFragment : Fragment(){
 
     override fun onStop() {
         super.onStop()
+
         binding.addMapView.removeView(mapView)
         Log.e("addMapFragment", "onStop  ")
 
         Log.e("addMapFragment", "onStop ${viewModel.updateKeywordMap.value.toString()} ")
     }
+
+
 
 
 

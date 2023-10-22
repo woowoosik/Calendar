@@ -7,8 +7,29 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 
 class LoadingDialog(context: Context) : Dialog(context){
+    init {
+        setCanceledOnTouchOutside(false)
+
+        window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        setContentView(R.layout.dialog_loading)
+    }
+
+/*
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setCanceledOnTouchOutside(false)
+
+        window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        setContentView(R.layout.dialog_loading)
+    }
+
+*/
+
+   /* override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_loading)
 
@@ -18,5 +39,7 @@ class LoadingDialog(context: Context) : Dialog(context){
         // 배경 투명하게 바꿔줌
         window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-    }
+
+
+    }*/
 }

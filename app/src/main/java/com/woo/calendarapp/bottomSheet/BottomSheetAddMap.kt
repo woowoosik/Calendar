@@ -21,6 +21,7 @@ import com.woo.calendarapp.LoadingDialog
 import com.woo.calendarapp.R
 import com.woo.calendarapp.adapter.BottomAddMapAdapter
 import com.woo.calendarapp.databinding.BottomsheetAddMapBinding
+import com.woo.calendarapp.fragment.AddFragment
 import com.woo.calendarapp.fragment.AddMapFragment
 import com.woo.calendarapp.viewmodel.MainViewModel
 
@@ -106,11 +107,8 @@ class BottomSheetAddMap : BottomSheetDialogFragment() {
 
         }
 
+
+
     }
 
-    override fun onStop() {
-        super.onStop()
-        Log.w("addMap", "onStop")
-       // bottomSheetBehavior!!.state = BottomSheetBehavior.STATE_HIDDEN
-    }
 }

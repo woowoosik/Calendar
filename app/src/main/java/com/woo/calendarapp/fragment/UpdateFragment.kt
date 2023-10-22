@@ -24,14 +24,20 @@ import androidx.core.view.isEmpty
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.snackbar.Snackbar
 import com.woo.calendarapp.EventObserver
+import com.woo.calendarapp.LoadingDialog
+import com.woo.calendarapp.PermissionCheck
 import com.woo.calendarapp.R
 import com.woo.calendarapp.databinding.FragmentUpdateBinding
+import com.woo.calendarapp.kakaoApi.KakaoMapUtils.Companion.moveMap
 import com.woo.calendarapp.schedule.Schedule
 import com.woo.calendarapp.utils.ScheduleUtils
 import com.woo.calendarapp.viewmodel.MainViewModel
@@ -61,6 +67,13 @@ class UpdateFragment : Fragment() {
     private lateinit var mapLocation : Pair<Double,Double>
 
 
+    private lateinit var startDate :String
+    private lateinit var endDate :String
+
+    private lateinit var loadingDialog: LoadingDialog
+
+    private lateinit var permissionCheck : PermissionCheck
+
     private val cal = Calendar.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,6 +87,9 @@ class UpdateFragment : Fragment() {
             mapLocation = Pair(arguments?.getDouble("x"), arguments?.getDouble("y")) as Pair<Double, Double>
 
         }
+
+        loadingDialog = LoadingDialog(requireActivity())
+        permissionCheck = PermissionCheck(requireActivity())
 
     }
     override fun onCreateView(
@@ -103,8 +119,8 @@ class UpdateFragment : Fragment() {
 
         binding.etTitle.setText("${arguments?.getString("title")}")
         binding.etContent.setText("${arguments?.getString("content")}")
-        binding.startDate.text = arguments?.getString("start")
-        binding.endDate.text = arguments?.getString("end")
+        startDate = arguments?.getString("start")!!
+        endDate = arguments?.getString("end")!!
 
         getMap()
 
@@ -211,9 +227,14 @@ class UpdateFragment : Fragment() {
         }
 
         binding.updatePlaceSwitch.setOnCheckedChangeListener { _, b ->
-            if(b){
+            if(permissionCheck.isAllPermissionsGranted() && b){
+                binding.updatePlaceSwitch.isChecked = true
                 binding.updateKeywordMap.visibility = View.VISIBLE
+
+                binding.mapView.removeView(mapView)
+                getMap()
             }else{
+                binding.updatePlaceSwitch.isChecked = false
                 binding.updateKeywordMap.visibility = View.GONE
             }
         }
@@ -223,19 +244,43 @@ class UpdateFragment : Fragment() {
             Log.e("updateKeywordSearch", "")
 
 
-            binding.mapView.removeView(mapView)
+     /*       binding.mapView.removeView(mapView)
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.main, AddMapFragment())
                 .addToBackStack(null)
                 .commit()
+*/
+
+            loadingDialog.show()
+            binding.mapView.removeView(mapView)
+
+            val addMapFragment = AddMapFragment()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.main, addMapFragment)
+                .addToBackStack(null)
+                .commit()
+
+            addMapFragment.lifecycle.addObserver(LifecycleEventObserver { source, event ->
+                if( event == Lifecycle.Event.ON_RESUME){
+                    Log.e("updateMapFramgnet", "ON_PAUSE dismiss")
+                    loadingDialog.dismiss()
+                }
+            })
+
         }
+
+
         viewModel.updateKeywordMap.observe(viewLifecycleOwner, EventObserver {
             Log.e(" updateFragment", " updateKeywordMap   x : ${viewModel.getLocation()!!.first}  y : ${viewModel.getLocation()!!.second}")
             mapLocation = Pair(viewModel.getLocation()!!.first, viewModel.getLocation()!!.second)
-            moveMap(viewModel.getLocation()!!.first, viewModel.getLocation()!!.second)
+            moveMap(viewModel.getLocation()!!.first, viewModel.getLocation()!!.second, mapView)
 
         })
 
+
+
+        binding.startDate.text = startDate
+        binding.endDate.text = endDate
 
 
     }
@@ -264,25 +309,41 @@ class UpdateFragment : Fragment() {
                 binding.endDate.text = "$year-${String.format("%02d", month+1)}-${String.format("%02d", dayOfMonth)}"
             }else{
                 when(b){
-                    0 ->  binding.startDate.text = "$year-${String.format("%02d", month+1)}-${String.format("%02d", dayOfMonth)}"
-                    else ->  binding.endDate.text = "$year-${String.format("%02d", month+1)}-${String.format("%02d", dayOfMonth)}"
+                    0 -> {
+                        binding.startDate.text = "$year-${String.format("%02d", month+1)}-${String.format("%02d", dayOfMonth)}"
+                        this.startDate = binding.startDate.text.toString()
+                    }
+                    else -> {
+                        binding.endDate.text = "$year-${String.format("%02d", month+1)}-${String.format("%02d", dayOfMonth)}"
+                        this.endDate = binding.endDate.text.toString()
+                    }
                 }
             }
         }
 
         when(b){
-            0 ->  DatePickerDialog(requireActivity(),
-                dateSetListener,
-                startDate.toString("yyyy").toInt() ,
-                startDate.toString("M").toInt()-1,
-                startDate.toString("dd").toInt()
-            ).show()
-            else ->  DatePickerDialog(requireActivity(),
-                dateSetListener,
-                endDate.toString("yyyy").toInt() ,
-                endDate.toString("M").toInt()-1,
-                endDate.toString("dd").toInt()
-            ).show()
+            0 -> {
+                DatePickerDialog(
+                    requireActivity(),
+                    R.style.DialogTheme,
+                    dateSetListener,
+                    startDate.toString("yyyy").toInt(),
+                    startDate.toString("M").toInt() - 1,
+                    startDate.toString("dd").toInt()
+                ).show()
+
+
+            }
+            else -> {
+                DatePickerDialog(
+                    requireActivity(),
+                    R.style.DialogTheme,
+                    dateSetListener,
+                    endDate.toString("yyyy").toInt(),
+                    endDate.toString("M").toInt() - 1,
+                    endDate.toString("dd").toInt()
+                ).show()
+            }
         }
 
     }
@@ -338,6 +399,7 @@ class UpdateFragment : Fragment() {
 
 
 
+/*
 
 
     fun marker(latitude:Double, longitude:Double , name:String){
@@ -356,68 +418,48 @@ class UpdateFragment : Fragment() {
         mapView.addPOIItem(marker)
 
     }
+*/
 
 
-
+    @SuppressLint("MissingPermission")
     fun getMap(){
-
-
         mapView = MapView(requireActivity())
         binding.mapView.addView(mapView)
 
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            println("mapLocatoin ${this::mapLocation.isInitialized}")
+        if (permissionCheck.isAllPermissionsGranted()) {
             if( !this::mapLocation.isInitialized ){
                 fusedLocationClient.lastLocation
                     .addOnSuccessListener { location : Location? ->
-                        println(" location +-  ${location}")
-                        /*          val mp = MapPoint.mapPointWithGeoCoord(location!!.latitude, location.longitude)
-                                  mapView.setMapCenterPoint(mp, true)
-                                  mapView.setZoomLevel(1, true)
-                                  marker(location!!.latitude, location.longitude , "pick")*/
-
                         mapLocation = Pair(location!!.longitude, location!!.latitude)
                         viewModel.setLocation(location!!.longitude, location!!.latitude)
-                        moveMap(location!!.longitude, location!!.latitude)
+                        moveMap(location!!.longitude, location!!.latitude, mapView)
 
                     }
             }else{
-                println(" getMap   x : ${mapLocation.first}  y : ${mapLocation.second}")
-
-                moveMap(mapLocation.first, mapLocation.second)
+                moveMap(mapLocation.first, mapLocation.second, mapView)
             }
 
-        }else{
-            val locationPermissionRequest = registerForActivityResult(
-                ActivityResultContracts.RequestMultiplePermissions()
-            ) { permissions ->
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    when {
-                        permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
-
-                        }
-                        permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
-
-                        } else -> {
-
-                    }
-                    }
-                }
-            }
-            locationPermissionRequest.launch(arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION))
+        } else {
+            requestPermissionLauncher.launch(permissionCheck.permission)
         }
-
     }
 
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            permissions.entries.forEach { permission ->
+                when {
+                    permission.value -> {
+                        Snackbar.make(binding.root, "설정에서 권한을 허용해주세요. ", Snackbar.LENGTH_SHORT).show()
+                    }
+                    shouldShowRequestPermissionRationale(permission.key) -> {
+                        Snackbar.make(binding.root,
+                            "권한설정 확인", Snackbar.LENGTH_SHORT).show()
+                    }
+                    else -> Snackbar.make(binding.root, "권한이 거절되어있습니다. 설정에서 허용해주세요.", Snackbar.LENGTH_SHORT).show()
+                }
+            }
+        }
+/*
     fun moveMap( longitude:Double ,latitude:Double) {
         Log.e("addFragment ", " move 1 ${mapLocation}")
         Log.e("addFragment ", " move 2 ${viewModel.getLocation()}")
@@ -426,7 +468,7 @@ class UpdateFragment : Fragment() {
         mapView.setMapCenterPoint(mp, true)
         mapView.setZoomLevel(1, true)
         marker(latitude, longitude, "pick")
-    }
+    }*/
 
 
     override fun onStart() {

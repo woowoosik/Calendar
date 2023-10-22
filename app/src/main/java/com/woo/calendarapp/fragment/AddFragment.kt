@@ -18,20 +18,28 @@ import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.core.view.isEmpty
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.google.android.gms.location.*
+import com.google.android.material.snackbar.Snackbar
 import com.woo.calendarapp.EventObserver
+import com.woo.calendarapp.LoadingDialog
+import com.woo.calendarapp.PermissionCheck
 import com.woo.calendarapp.R
 import com.woo.calendarapp.databinding.FragmentAddBinding
+import com.woo.calendarapp.kakaoApi.KakaoMapUtils.Companion.moveMap
 import com.woo.calendarapp.schedule.Schedule
 import com.woo.calendarapp.utils.ScheduleUtils
 import com.woo.calendarapp.viewmodel.MainViewModel
@@ -66,14 +74,12 @@ class AddFragment : Fragment() {
     private lateinit var startDate :String
     private lateinit var endDate :String
 
+    private lateinit var loadingDialog: LoadingDialog
+
+    private lateinit var permissionCheck : PermissionCheck
+
+
     private val cal = Calendar.getInstance()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-
-
-    }
 
     @RequiresApi(Build.VERSION_CODES.N)
     @SuppressLint("ResourceAsColor")
@@ -88,7 +94,8 @@ class AddFragment : Fragment() {
         binding.fragment = this@AddFragment
 
 
-
+        loadingDialog = LoadingDialog(requireActivity())
+        permissionCheck = PermissionCheck(requireActivity())
 
         return binding.root
     }
@@ -147,7 +154,6 @@ class AddFragment : Fragment() {
         binding.endDate.text = endDate
 
 
-        getMap()
 
         binding.startDate.setOnClickListener {
             datePicker(0)
@@ -229,14 +235,22 @@ class AddFragment : Fragment() {
         binding.keywordSearch.setOnClickListener {
             Log.e("addFragment", "")
 
+            loadingDialog.show()
             Log.e(" keywordSearch text"," ${startDate} ${endDate}")
             binding.mapView.removeView(mapView)
 
+            val addMapFragment = AddMapFragment()
             requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.main, AddMapFragment())
+                .replace(R.id.main, addMapFragment)
                 .addToBackStack(null)
                 .commit()
 
+            addMapFragment.lifecycle.addObserver(LifecycleEventObserver { source, event ->
+                if( event == Lifecycle.Event.ON_RESUME){
+                    Log.e("addMapFramgnet", "ON_PAUSE dismiss")
+                    loadingDialog.dismiss()
+                }
+            })
 
         }
 
@@ -245,18 +259,27 @@ class AddFragment : Fragment() {
         viewModel.updateKeywordMap.observe(viewLifecycleOwner, EventObserver {
             Log.e(" addFragment", " updateKeywordMap   x : ${viewModel.getLocation()!!.first}  y : ${viewModel.getLocation()!!.second}")
             mapLocation = Pair(viewModel.getLocation()!!.first, viewModel.getLocation()!!.second)
-            moveMap(viewModel.getLocation()!!.first, viewModel.getLocation()!!.second)
+            moveMap(viewModel.getLocation()!!.first, viewModel.getLocation()!!.second, mapView)
 
         })
 
 
 
 
+
+
+
         //keyword map
         binding.placeSwitch.setOnCheckedChangeListener { _, b ->
-            if(b){
+
+            if(permissionCheck.isAllPermissionsGranted() && b){
+                binding.placeSwitch.isChecked = true
                 binding.addKeywordMap.visibility = VISIBLE
+
+                binding.mapView.removeView(mapView)
+                getMap()
             }else{
+                binding.placeSwitch.isChecked = false
                 binding.addKeywordMap.visibility = GONE
             }
         }
@@ -374,6 +397,11 @@ class AddFragment : Fragment() {
     fun addSchedule()  {
         Log.e("adddFragment"," click ")
         Log.e("adddFragment"," ${DateTime("${binding.startDate.text}")}  ${binding.etTitle.text}  $bColor")
+
+        if(!permissionCheck.isAllPermissionsGranted()){
+            mapLocation = Pair(0.0,0.0)
+        }
+
         viewModel.addSchedule(
             Schedule(
                 DateTime("${binding.startDate.text}"),
@@ -392,7 +420,7 @@ class AddFragment : Fragment() {
     }
 
 
-    fun marker(latitude:Double, longitude:Double , name:String){
+  /*  fun marker(latitude:Double, longitude:Double , name:String){
         val marker = MapPOIItem()
 
         mapView.addPOIItem(marker)
@@ -408,57 +436,15 @@ class AddFragment : Fragment() {
         mapView.addPOIItem(marker)
 
     }
+*/
 
-
-
+/*
     @SuppressLint("MissingPermission")
     fun getMap(){
 
         mapView = MapView(requireActivity())
         binding.mapView.addView(mapView)
-/*
-        println("@@ 주소 위도 경도 geoCode   ::   ${ScheduleUtils.geoCoding("경기도 수원시 영통구 망포2동 덕영대로 1400", requireActivity())}")
-        // println("@@ 주소 위도 경도 getAddress    ::   ${ScheduleUtils.getAddress(geoCoding("경기도 수원시 영통구 망포2동 덕영대로 1400", requireActivity()))}")
 
-        val triple = KakaoMapUtils.kakaoMapPermission(requireActivity())
-        Log.e("getMap", "${triple}")
-        Log.e("getMap", "${!this::mapLocation.isInitialized} ")
-        if(triple.first){
-            if( !this::mapLocation.isInitialized ){
-                fusedLocationClient.lastLocation
-                    .addOnSuccessListener { location : Location? ->
-                        println(" location +-  ${location}")
-
-                        mapLocation = Pair(location!!.longitude, location!!.latitude)
-                        viewModel.setLocation(location!!.longitude, location!!.latitude)
-                        KakaoMapUtils.moveMap(location!!.longitude, location!!.latitude, mapView)
-
-                    }
-
-            }else{
-                KakaoMapUtils.moveMap(mapLocation.first, mapLocation.second, mapView)
-            }
-        }else{
-            val locationPermissionRequest = registerForActivityResult(
-                ActivityResultContracts.RequestMultiplePermissions()
-            ) { permissions ->
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    when {
-                        permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
-
-                        }
-                        permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
-
-                        } else -> {
-
-                    }
-                    }
-                }
-            }
-            locationPermissionRequest.launch(arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION))
-        }*/
         if (checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -467,6 +453,7 @@ class AddFragment : Fragment() {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
+            Log.e("getMap", "true")
             println("mapLocatoin ${this::mapLocation.isInitialized}")
             if( !this::mapLocation.isInitialized ){
                 fusedLocationClient.lastLocation
@@ -486,6 +473,7 @@ class AddFragment : Fragment() {
             }
 
         }else{
+            Log.e("getMap", "false")
             val locationPermissionRequest = registerForActivityResult(
                 ActivityResultContracts.RequestMultiplePermissions()
             ) { permissions ->
@@ -502,14 +490,52 @@ class AddFragment : Fragment() {
                     }
                 }
             }
-            locationPermissionRequest.launch(arrayOf(
+            requestPermissionLauncher.launch(arrayOf(
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION))
         }
 
+    } */  // getMap()
 
+    @SuppressLint("MissingPermission")
+    fun getMap(){
+        mapView = MapView(requireActivity())
+        binding.mapView.addView(mapView)
 
-    }   // getMap()
+        if (permissionCheck.isAllPermissionsGranted()) {
+            if( !this::mapLocation.isInitialized ){
+                fusedLocationClient.lastLocation
+                    .addOnSuccessListener { location : Location? ->
+                        mapLocation = Pair(location!!.longitude, location!!.latitude)
+                        viewModel.setLocation(location!!.longitude, location!!.latitude)
+                        moveMap(location!!.longitude, location!!.latitude, mapView)
+                    }
+            }else{
+                moveMap(mapLocation.first, mapLocation.second, mapView)
+            }
+
+        } else {
+            requestPermissionLauncher.launch(permissionCheck.permission)
+        }
+    }
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            permissions.entries.forEach { permission ->
+                when {
+                    permission.value -> {
+                        Snackbar.make(binding.root, "설정에서 권한을 허용해주세요. ", Snackbar.LENGTH_SHORT).show()
+                    }
+                    shouldShowRequestPermissionRationale(permission.key) -> {
+                        Snackbar.make(binding.root,
+                            "권한설정 확인", Snackbar.LENGTH_SHORT).show()
+                    }
+                    else -> Snackbar.make(binding.root, "권한이 거절되어있습니다. 설정에서 허용해주세요.", Snackbar.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+/*
 
     fun moveMap( longitude:Double ,latitude:Double) {
         Log.e("addFragment ", " move 1 ${mapLocation}")
@@ -520,6 +546,7 @@ class AddFragment : Fragment() {
         mapView.setZoomLevel(1, true)
         marker(latitude, longitude, "pick")
     }
+*/
 
 
 

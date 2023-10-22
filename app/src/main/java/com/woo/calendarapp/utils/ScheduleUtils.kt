@@ -1,16 +1,22 @@
 package com.woo.calendarapp.utils
 
+import android.app.DatePickerDialog
 import android.content.Context
 import android.location.Geocoder
 import android.location.Location
+import com.woo.calendarapp.R
 import com.woo.calendarapp.calendar.ChildView
 import com.woo.calendarapp.schedule.Schedulebar
+import org.joda.time.DateTime
+import yuku.ambilwarna.AmbilWarnaDialog
 import java.util.*
 
 class ScheduleUtils {
 
     companion object {
-        fun geoCoding(address: String, context: Context): Location {
+
+
+        /*fun geoCoding(address: String, context: Context): Location {
             return try {
                 Geocoder(context, Locale.KOREA).getFromLocationName(address, 1)?.let {
                     Location("").apply {
@@ -55,7 +61,7 @@ class ScheduleUtils {
                 e.printStackTrace()
                 getAddress(location, context)
             }
-        }
+        }*/
     }
 
 }
