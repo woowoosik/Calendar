@@ -84,26 +84,14 @@ class KakaoRetrofit{
                         }
                     }
                     job.join()
-
                 }
-
             }
-
 
         result.documents = list
 
-
-
-
-
-
         return result
 
-
-
-
     }
-
 
 
 }

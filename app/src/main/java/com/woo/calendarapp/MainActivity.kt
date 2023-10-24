@@ -38,9 +38,6 @@ class MainActivity : AppCompatActivity(){
         mainViewModel.addMainComplate.observe(this, EventObserver {
             val n = DateTime.now().toString("MM")
             val h = DateTime(mainViewModel.getDate()).toString("MM")
-            println("${n}")
-            println("$h")
-            println("-_---- -- -${h.toInt() - n.toInt()}")
             mainBinding.calendar.adapter = MainFragmentAdapter(this)
             mainBinding.calendar.setCurrentItem(MainFragmentAdapter.START_POSITION +( h.toInt() - n.toInt()), false)
         })
@@ -55,61 +52,13 @@ class MainActivity : AppCompatActivity(){
         })
 
         mainBinding.tb.addSchedule.setOnClickListener {
-            Log.e("MaingActivity"," 스케쥴 추가 이동 ")
 
-          //  val addFragment = AddFragment()
-           /* addFragment.loadingDialog = LoadingDialog(this)
-            addFragment.permissionCheck = PermissionCheck(this)
-*/
            supportFragmentManager.beginTransaction()
                 .replace(R.id.main, AddFragment())
                 .addToBackStack(null)
                 .commit()
         }
 
-        /*
-        fun getHashKey() {
-            var packageInfo: PackageInfo? = null
-            try {
-                packageInfo = packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES)
-            } catch (e: PackageManager.NameNotFoundException) {
-                e.printStackTrace()
-            }
-            if (packageInfo == null) Log.e("KeyHash", "KeyHash:null")
-            for (signature in packageInfo!!.signatures) {
-                try {
-                    val md: MessageDigest = MessageDigest.getInstance("SHA")
-                    md.update(signature.toByteArray())
-                    //Log.d("KeyHash", Base64.encodeToString(md.digest(), Base64.DEFAULT))
-                    Log.d("KeyHash", Base64.encode(md.digest(),0).toString())
-                } catch (e: NoSuchAlgorithmException) {
-                    Log.d("KeyHash", "Unable to get MessageDigest. signature=$signature")
-
-                }
-            }
-
-        }
-        var keyHash = Utility.getKeyHash(this)
-        Log.d("KeyHash", "keyhash : $keyHash")
-*/
-
-       /* try {
-            val information =
-                packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNING_CERTIFICATES)
-            val signatures = information.signingInfo.apkContentsSigners
-            val md = MessageDigest.getInstance("SHA")
-            for (signature in signatures) {
-                val md: MessageDigest
-                md = MessageDigest.getInstance("SHA")
-                md.update(signature.toByteArray())
-                var hashcode = String(Base64.encode(md.digest(), 0))
-                Log.d("hashcode", "" + hashcode)
-            }
-        } catch (e: Exception) {
-            Log.d("hashcode", "에러::" + e.toString())
-
-        }
-*/
     }
 
 

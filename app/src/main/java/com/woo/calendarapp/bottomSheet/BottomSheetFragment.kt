@@ -54,8 +54,6 @@ class BottomSheetFragment : BottomSheetDialogFragment(){
 
         sheetBinding.recyclerPager.layoutManager = LinearLayoutManager(context)
 
-        // val adapter = BottomRecyclerAdapter(sheetViewModel.schedule)
-        println("BottomFragment ${mainViewModel.dayScheduleList}")
         val adapter = BottomRecyclerAdapter(mainViewModel.dayScheduleList)
         sheetBinding.recyclerPager.adapter = adapter
 
@@ -65,10 +63,7 @@ class BottomSheetFragment : BottomSheetDialogFragment(){
 
         adapter.setItemClickListener(object : BottomRecyclerAdapter.OnItemClickListener{
             override fun onItemClick(schedule: Schedule) {
-                println("${schedule.title}  ${schedule.content}  ${schedule.scheduleBarColor}")
 
-                println(" isChecked ${schedule.isChecked}    x  ${schedule.x}  y  ${schedule.y}  ")
-                // bottomSheetFragment.show(childFragmentManager, "bottomsheet")
                 val bottomSheetFragmentChild = BottomSheetFragmentChild()
                 val bundle = Bundle()
                 bundle.putInt("id", schedule.id)
@@ -90,7 +85,6 @@ class BottomSheetFragment : BottomSheetDialogFragment(){
 
         adapter.setDeleteItemClickListener(object :BottomRecyclerAdapter.OnItemClickListener{
             override fun onItemClick(schedule: Schedule) {
-                println("삭제 버튼 ")
                 mainViewModel.deleteSchedule(schedule)
 
             }
@@ -102,7 +96,6 @@ class BottomSheetFragment : BottomSheetDialogFragment(){
 
 
         sheetBinding.bottomMainBack.setOnClickListener {
-            println("bottomsheet bakc cilck")
             bottomSheetBehavior!!.state = STATE_HIDDEN
         }
 
@@ -110,7 +103,7 @@ class BottomSheetFragment : BottomSheetDialogFragment(){
 
 
         mainViewModel.updateOpen.observe(viewLifecycleOwner, EventObserver {
-            println("click open update")
+
             bottomSheetBehavior!!.state = STATE_HIDDEN
         })
 
@@ -137,7 +130,6 @@ class BottomSheetFragment : BottomSheetDialogFragment(){
     override fun onStart() {
         super.onStart()
 
-        // full screen
 
         if (dialog != null) {
             val bottomSheet: View = dialog!!.findViewById(com.google.android.material.R.id.design_bottom_sheet)
@@ -163,14 +155,9 @@ class BottomSheetFragment : BottomSheetDialogFragment(){
 
 
     fun deleteListener() {
-        // 리스너를 구현한 Adapter 클래스를 Callback 클래스의 생성자로 지정
         val itemTouchHelperCallback = ItemTouchHelperCallback()
-
-        // ItemTouchHelper의 생성자로 ItemTouchHelper.Callback 객체 셋팅
         val helper = ItemTouchHelper(itemTouchHelperCallback)
-        // RecyclerView에 ItemTouchHelper 연결
         helper.attachToRecyclerView(sheetBinding.recyclerPager)
-        //
         sheetBinding.recyclerPager.apply {
             setOnTouchListener { _, _ ->
                 itemTouchHelperCallback.removePreviousClamp(this)

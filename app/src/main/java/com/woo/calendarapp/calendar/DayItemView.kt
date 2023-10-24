@@ -30,24 +30,8 @@ class DayItemView @JvmOverloads constructor(
 
     private var paint: Paint = Paint()
 
-/*
-
-    interface OnDayItemClickListener {
-        fun onItemClick(date:DateTime, dateList :MutableList<Schedule>)
-    }
-    fun setDayItemClickListener(onItemClickListener: OnDayItemClickListener) {
-        this.dayItemClickListener = onItemClickListener
-    }
-
-    private lateinit var dayItemClickListener : OnDayItemClickListener
-*/
-
-
     init {
 
-
-        /*    context.withStyledAttributes(attrs, R.styleable.CalendarView, defStyleAttr, defStyleRes) {
-                val dayTextSize = getDimensionPixelSize(R.styleable.CalendarView_dayTextSize, 0).toFloat()*/
         val dHeight = resources.displayMetrics.heightPixels
         var h = dHeight / 42
         paint = TextPaint().apply {
@@ -62,10 +46,6 @@ class DayItemView @JvmOverloads constructor(
             }
         }
         setOnClickListener {
-            Log.e("DayItemView", " !!! ${date} ")
-
-           // dayItemClickListener = MainFragment()
-           // dayItemClickListener.onItemClick(date, mainViewModel.daySchedule(date))
             mainViewModel.daySchedule(date)
         }
 
@@ -84,12 +64,6 @@ class DayItemView @JvmOverloads constructor(
             (height  /8 +5 ).toFloat(),
             paint
         )
-    }
-
-
-    override fun callOnClick(): Boolean {
-        return super.callOnClick()
-        println("callOnClick")
     }
 
 }

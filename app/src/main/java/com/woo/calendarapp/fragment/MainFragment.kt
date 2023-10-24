@@ -56,13 +56,11 @@ class MainFragment: Fragment() {
         arguments?.let {
             millis = it.getLong(MILLIS)
         }
-        println("onstart onCreate")
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        println("onstart onViewCreated")
     }
 
 
@@ -72,7 +70,6 @@ class MainFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        println("onstart onCreateView")
         mainFragmentVM = ViewModelProvider(activity as ViewModelStoreOwner)[MainFragmentViewModel::class.java]
         mainViewModel = ViewModelProvider(activity as ViewModelStoreOwner)[MainViewModel::class.java]
 
@@ -89,57 +86,29 @@ class MainFragment: Fragment() {
 
 
         mainViewModel.detailComplate.observe(viewLifecycleOwner, EventObserver {
-        /*    val bottomSheetFragment = BottomSheetFragment()
-            bottomSheetFragment.show(childFragmentManager, "bottomsheet")*/
-            println("MainFramgnet detailComplate 1 ${mainViewModel.clickDay.value}")
-
-            mainViewModel.dayScheduleList.forEachIndexed{ idx , it__ ->
-
-                println("    ${mainViewModel.dayScheduleList[idx]}     ")
-
-            }
-            println("MainFramgnet detailComplate 2")
+         /*   mainViewModel.dayScheduleList.forEachIndexed{ idx , it__ ->
+            }*/
 
             val bottomSheetFragment = BottomSheetFragment()
             activity?.let { it1 -> bottomSheetFragment.show(it1.supportFragmentManager, bottomSheetFragment.tag) }
-            println("MainFramgnet detailComplate 3")
+
         })
-
-
-
-        /*mainFragmentBinding.calendarView.children.
-        val listener = object:DayItemView.OnDayItemClickListener{
-            override fun onItemClick(date: DateTime, dateList: MutableList<Schedule>) {
-                val bottomSheetFragment = BottomSheetFragment()
-                activity?.let { it1 -> bottomSheetFragment.show(it1.supportFragmentManager, bottomSheetFragment.tag) }
-
-            }
-
-        }
-*/
-
-
-
 
         return mainFragmentBinding.root
     }
 
-    override fun onStart() {
-        super.onStart()
-        println("onstart mainframgent")
-    }
     override fun onResume() {
         super.onResume()
         mainViewModel.setDate(DateTime(millis).toString("yyyy-MM"))
 
     }
 
-    fun showBottomSheet(){
+   /* fun showBottomSheet(){
         val bottomSheetFragment = BottomSheetFragment()
         activity?.let {
                 it1 -> bottomSheetFragment.show(it1.supportFragmentManager, bottomSheetFragment.tag)
         }
-    }
+    }*/
 
 
     fun drawSchedulebar(list: List<Int>, schedulebar:Schedulebar, context: Context){
@@ -153,9 +122,6 @@ class MainFragment: Fragment() {
 
 
     fun getSchedulebar(){
-        println("datr: ${DateTime(millis)}")
-        println("getMonthList : ${getMonthList(DateTime(millis))}")
-
         listAll = mainViewModel.getSchedulebarData(getMonthList(DateTime(millis)))
 
         listAll.forEachIndexed{ idx , it__ ->
@@ -176,30 +142,22 @@ class MainFragment: Fragment() {
         val margin = 3
 
         var length = 0
-        // var ind = 3 // 테스트 index
 
         listAll.forEachIndexed { index, _ ->
             var _height = h * (index * 7) - ((index - 1) * h) + index  // h * (index * 7) - ((index-1) * h )
 
             listAll[index].forEachIndexed { index_, it_ ->
                 listAll[index][index_].forEachIndexed { index_2, it_2 ->
-                    Log.e("1@", " $index  $index_  $index_2  ")
-                    Log.e("1@", " ${ listAll[index][index_][index_2]}    ")
-
-                    Log.e("2@", " it_2 : ${it_2}  ")
                     if (it_2.date != 0) {
                         // if (index_2 != 0) {   줄인거
                         // 현 date 전 date 같은가
                         if (index_2 != 0 && it_2 != listAll[index][index_][index_2 - 1]) {
-                            Log.e("3@", " ${listAll[index][index_][index_2 - 1]}  ")
                             // 다름
                             drawSchedulebar(listOf(_height, ((index_2-length)*_width)+margin, length*_width-margin),listAll[index][index_][index_2-1], requireContext())
-
 
                             length = 1
                             //마지막일 경우
                             if (index_2 == listAll[index][index_].size - 1) {
-                                println("  다르고 마지막 ")
                                 drawSchedulebar(listOf(
                                     _height,
                                     (listAll[index][index_].size - length) * _width + margin,
@@ -211,8 +169,6 @@ class MainFragment: Fragment() {
                         } else  {
                             // 같음 ( length ++ )
                             length++
-                            Log.e(TAG, " if |||  index: $index_2 | length: $length ")
-                            Log.e(TAG, " if |||   ${_width}  ${_height} ")
                             // 마지막일 경우
                             if (index_2 == listAll[index][index_].size - 1) {
                                 drawSchedulebar(listOf(
@@ -227,12 +183,8 @@ class MainFragment: Fragment() {
 
                     } else if (it_2.date == 0) {
                         // 0을 만난서 스케줄을 그림  11110
-                        Log.e(TAG, " else |||  index: $index_2 | length: $length  ")
-                        Log.e(TAG, " if |||   ${_width}  ${_height} ")
-
                         //그리기
-                        Log.e(TAG, "  index:  $index_2   it:   $it_2   ${_width}  ${_height}")
-                        Log.e(
+                        Log.w(
                             TAG,
                             "${_height}, ${(index_2 - length) * _width}, ${length * _width} "
                         )
@@ -246,7 +198,6 @@ class MainFragment: Fragment() {
                         length = 0
                     }
                 }
-                println("@@@@ ${_height}  $h")
                 _height += h
                 length = 0
             }

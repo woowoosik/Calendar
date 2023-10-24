@@ -15,17 +15,14 @@ import com.woo.calendarapp.schedule.Schedule
 class BottomRecyclerAdapter(private var list : MutableList<Schedule>)
     : RecyclerView.Adapter<BottomRecyclerAdapter.PagerViewHolder>()  {
 
-    // (4) setItemClickListener로 설정한 함수 실행
+
     private lateinit var itemClickListener : OnItemClickListener
     private lateinit var deleteItemClickListener : OnItemClickListener
-   /* interface OnItemClickListener {
-        fun onItemClick(title:String, content:String)
-    }*/
+
     interface OnItemClickListener {
         fun onItemClick(schedule: Schedule)
     }
 
-    // (3) 외부에서 클릭 시 이벤트 설정
     fun setItemClickListener(onItemClickListener: OnItemClickListener) {
         this.itemClickListener = onItemClickListener
     }
@@ -47,8 +44,6 @@ class BottomRecyclerAdapter(private var list : MutableList<Schedule>)
     override fun onBindViewHolder(holder: PagerViewHolder, position: Int) {
 
         Log.e(" onBinsViewHolder", " ${list[position].title}  ${list[position].content}")
-
-        Log.e(" onBinsViewHolder", "x ${list[position].isChecked} ${list[position].x}  y ${list[position].y}")
         holder.binding.itemTitle.text = list[position].title
         holder.binding.itemContent.text = list[position].content
         var bgShape : GradientDrawable = binding.itemBar.background as GradientDrawable
@@ -70,10 +65,6 @@ class BottomRecyclerAdapter(private var list : MutableList<Schedule>)
 
     override fun getItemCount(): Int  = list.size
 
-   /* fun setData(newData: List<Schedule>){
-        list = newData as MutableList<Schedule>
-        notifyDataSetChanged()
-    }*/
 
 
 

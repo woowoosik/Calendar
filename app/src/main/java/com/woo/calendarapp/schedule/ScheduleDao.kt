@@ -9,9 +9,6 @@ interface ScheduleDao {
 
     @Query("SELECT * FROM SCHEDULE ORDER BY startDate ASC, endDate DESC")
     fun getAllDate():List<Schedule>
-    // WHERE logindate >= '2000-07-05' AND logindate < '2011-11-10'
-
-    //format(wt, '%Y-%m-%d')
 
     @Query("SELECT * FROM SCHEDULE WHERE  " +
             "startDate between :start and :end OR "+

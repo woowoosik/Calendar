@@ -20,13 +20,11 @@ class ItemTouchHelperCallback(
     private var currentPosition: Int? = null    // 현재 선택된 recycler view의 position
     private var previousPosition: Int? = null   // 이전에 선택했던 recycler view의 position
     private var currentDx = 0f                  // 현재 x 값
-    //private var clamp = 0f                      // 고정시킬 크기
 
     override fun getMovementFlags(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder
     ): Int {
-        Log.d("getMovementFlags", " @@")
         // Drag와 Swipe 방향을 결정 Drag는 사용하지 않아 0, Swipe의 경우는 LEFT, RIGHT 모두 사용가능하도록 설정
         return makeMovementFlags(0, LEFT or RIGHT)
     }
@@ -38,7 +36,6 @@ class ItemTouchHelperCallback(
     ) = false
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        Log.d("onSwiped", " @@")
     }
 
     // 사용자가 view를 swipe 했다고 간주할 최소 속도 정하기
@@ -48,14 +45,12 @@ class ItemTouchHelperCallback(
     // (사용자가 손을 떼면 호출됨)
     override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float {
         // -clamp 이상 swipe시 isClamped를 true로 변경 아닐시 false로 변경
-        Log.e("getSwipeThreshold","@@@@@@@@@@@@@@@@@@@@@")
         setTag(viewHolder, currentDx <= -getView(viewHolder).width.toFloat()/5)
         return 2f
     }
 
 
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
-        Log.e("clearView","@@@@@@@@@@@@@@@@@@@@@")
         currentDx = 0f
         previousPosition = viewHolder.bindingAdapterPosition
         getDefaultUIUtil().clearView(getView(viewHolder))
@@ -64,7 +59,6 @@ class ItemTouchHelperCallback(
 
     // ItemTouchHelper가 ViewHolder를 스와이프 되었거나 드래그 되었을 때 호출
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
-        Log.e("onSelectedChanged","@@@@@@@@@@@@@@@@@@@@@")
         viewHolder?.let {
             currentPosition = viewHolder.bindingAdapterPosition    // 현재 드래그 또는 스와이프 중인 view 의 position 기억하기
             getDefaultUIUtil().onSelected(getView(it))
@@ -80,14 +74,10 @@ class ItemTouchHelperCallback(
         actionState: Int,
         isCurrentlyActive: Boolean
     ) {
-
-        Log.e("onChildDraw","@@@@@@@@@@@@@@@@@@@@@")
         if (actionState == ACTION_STATE_SWIPE) {
             val view = getView(viewHolder)
             val isClamped = getTag(viewHolder)
             val x =  clampViewPositionHorizontal(view, dX, isClamped, isCurrentlyActive)
-
-            Log.e("onChildDraw","$x")
 
             currentDx = x
             getDefaultUIUtil().onDraw(
@@ -111,27 +101,18 @@ class ItemTouchHelperCallback(
         isClamped: Boolean,
         isCurrentlyActive: Boolean
     ) : Float {
-        Log.e("PositionHorizontal","@@@@@@@@@@@@@@@@@@@@@")
         // View의 가로 길이의 절반까지만 swipe 되도록
         val min: Float = -view.width.toFloat()/3
         // RIGHT 방향으로 swipe 막기
         val max: Float = 0f
 
-
-        Log.e("if"," $isClamped")
         val x = if (isClamped) {
-            Log.e("if"," 고정됨")
             // View가 고정되었을 때 swipe되는 영역 제한
             if (isCurrentlyActive) dX - view.width.toFloat()/5
             else -view.width.toFloat()/5
         } else {
-            Log.e("if"," 고정안됨  $dX")
             dX
         }
-
-        Log.e("clamp3", "$max  $x   $min")
-        Log.e("clamp"," ${min(max(min, x), max)}")
-        Log.e("clamp2"," ${max(min, x)}   $max")
 
         return min(max(min, x), max)
     }

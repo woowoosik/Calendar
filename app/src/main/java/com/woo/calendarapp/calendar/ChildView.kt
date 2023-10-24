@@ -32,7 +32,6 @@ class ChildView @JvmOverloads constructor(
 
 
     init{
-        Log.e("ChildView", " ")
         initView()
     }
 
@@ -48,21 +47,12 @@ class ChildView @JvmOverloads constructor(
         params.topMargin = list[0]
         binding.childTv.layoutParams = params
 
-        Log.e("ChildView ", " ${list[0]}  ${list[1]}  ${list[2]}")
         binding.childTv.text = " 테스트 "
-       // binding.childTv.setBackgroundColor(Color.parseColor("#dd0f00"))
         binding.childTv.setBackgroundResource(R.drawable.schedulebar)
 
         var bgShape : GradientDrawable = binding.childTv.background as GradientDrawable
-       /* if(list[2] == 1073){
-            bgShape.setColor(Color.parseColor("#FF91CA8B"))
-        }else{
-            bgShape.setColor(R.color.schedulebarColor)
-        }*/
 
 
-        println(" child bar:  ${schedulebar.scheduleBarColor}")
-        println(" child text:  ${schedulebar.scheduleTextColor}")
 
         binding.childTv.setSingleLine()
 

@@ -34,7 +34,6 @@ import com.woo.calendarapp.adapter.BottomRecyclerAdapter
 import com.woo.calendarapp.bottomSheet.BottomSheetAddMap
 import com.woo.calendarapp.databinding.FragmentAddMapBinding
 import com.woo.calendarapp.schedule.Schedule
-import com.woo.calendarapp.utils.ScheduleUtils
 import com.woo.calendarapp.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -62,25 +61,12 @@ class AddMapFragment : Fragment() {
     @Inject
     lateinit var permissionCheck : PermissionCheck
 
-/*
-
-    private var updateListener : OnUpdateClickListener? = null
-    interface OnUpdatelickListener{
-        fun onUpdateClick()
-    }
-    fun setUpdateClickListener(onUpdateClickListener: OnUpdateClickListener) {
-        this.updateListener = onUpdateClickListener
-    }
-*/
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.e("onCreateView", "AddMapFragment")
         viewModel =  ViewModelProvider(activity as ViewModelStoreOwner)[MainViewModel::class.java]
 
         binding =  DataBindingUtil.inflate(inflater, R.layout.fragment_add_map, container, false)
@@ -89,8 +75,6 @@ class AddMapFragment : Fragment() {
         //kakao map
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
-        // loadingDialog = LoadingDialog(requireActivity())
-
 
         getMap()
 
@@ -98,23 +82,12 @@ class AddMapFragment : Fragment() {
         binding.layout.isClickable = true
 
         binding.btMapSearch.setOnClickListener {
-
-
             searchKeyword()
 
-
-           // viewModel.searchKeyword("은행")
         }
 
 
         viewModel.searchKeyword.observe(viewLifecycleOwner, EventObserver {
-
-
-
-            println("searchKeyword observe ")
-            println("${viewModel.getSearchKeyList().documents.size}")
-
-
 
            val bottomSheetAddMap = BottomSheetAddMap()
 
@@ -122,7 +95,6 @@ class AddMapFragment : Fragment() {
 
             bottomSheetAddMap.lifecycle.addObserver(LifecycleEventObserver { source, event ->
                 if( event == Lifecycle.Event.ON_PAUSE){
-                Log.e("addMapFramgnet", "ON_PAUSE dismiss")
                 loadingDialog.dismiss()
             }
             })
@@ -145,7 +117,6 @@ class AddMapFragment : Fragment() {
             ) {
                 fusedLocationClient.lastLocation
                     .addOnSuccessListener { location : Location? ->
-                        println(" location +-  ${location}")
                         mapLocation = Pair(location!!.longitude, location!!.latitude)
                         moveMap(location!!.longitude, location!!.latitude)
 
@@ -158,14 +129,12 @@ class AddMapFragment : Fragment() {
         }
 
        viewModel.clickMapLocation.observe(requireActivity()) {
-           println("x : ${it.first}  y : ${it.second}")
            mapLocation = Pair(it.first, it.second)
            moveMap(it.first, it.second)
        }
 
 
         binding.updateMap.setOnClickListener {
-            println("fragment updateMap")
             updateMap()
         }
 
@@ -192,7 +161,6 @@ class AddMapFragment : Fragment() {
 
 
     fun searchKeyword(){
-        println("검색버튼 클릭")
         loadingDialog.show()
         if(binding.etMapSearch.text.toString() == ""){
             Toast.makeText(requireContext(),
@@ -200,39 +168,14 @@ class AddMapFragment : Fragment() {
             loadingDialog.dismiss()
         }else{
             viewModel.searchKeyword(binding.etMapSearch.text.toString())
-            // viewModel.searchKeyword("은행")
+
         }
     }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-
-        Log.e("onViewStateRestored", "AddMapFragment")
-    }
-
-    override fun onAttach(context: Context) {
-        Log.e("onAttach", "AddMapFragment")
-        super.onAttach(context)
-    }
-    override fun onDestroyView() {
-        Log.e("onDestroyView", "AddMapFragment")
-        super.onDestroyView()
-    }
-    override fun onDestroy() {
-        Log.e("onDestroy", "AddMapFragment")
-        super.onDestroy()
-
-    }
-
-
-
-
 
     fun marker(latitude:Double, longitude:Double , name:String){
         val marker = MapPOIItem()
 
         mapView.addPOIItem(marker)
-        //맵 포인트 위도경도 설정
         //맵 포인트 위도경도 설정
         val mapPoint = MapPoint.mapPointWithGeoCoord(latitude, longitude)
         marker.itemName = name
@@ -265,13 +208,11 @@ class AddMapFragment : Fragment() {
             if( !this::mapLocation.isInitialized ){
                 fusedLocationClient.lastLocation
                     .addOnSuccessListener { location : Location? ->
-                        println(" location +-  ${location}")
                         mapLocation = Pair(location!!.longitude, location!!.latitude)
                         moveMap(location!!.longitude, location!!.latitude)
 
                     }
             }else{
-                Log.w("addMapFragment", "getMap() else")
                 moveMap(mapLocation.first, mapLocation.second)
             }
         }else{
@@ -300,8 +241,6 @@ class AddMapFragment : Fragment() {
 
 
     fun moveMap( longitude:Double ,latitude:Double) {
-
-        Log.w("addMapFragment", "moveMap()")
         val mp = MapPoint.mapPointWithGeoCoord(latitude, longitude)
         mapView.setMapCenterPoint(mp, true)
         mapView.setZoomLevel(1, true)
@@ -310,12 +249,8 @@ class AddMapFragment : Fragment() {
 
 
     fun updateMap(){
-        println("updateMap   ${mapLocation.first}  ${mapLocation.second}")
-
         val vm = viewModel.getLocation()
-        Log.w("addMapFragment", " ${vm }  ${mapLocation}")
         if( vm == null || vm != mapLocation){
-            Log.w("addMapFragment", " 들어옴")
             viewModel.setLocation(mapLocation.first, mapLocation.second)
         }
 
@@ -326,7 +261,6 @@ class AddMapFragment : Fragment() {
 
 
     fun removeFragment() {
-        Log.e("removeFragment", "addMapFragment ")
         val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
         fragmentManager.beginTransaction()
             .remove(this@AddMapFragment)
@@ -343,11 +277,7 @@ class AddMapFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
-
         binding.addMapView.removeView(mapView)
-        Log.e("addMapFragment", "onStop  ")
-
-        Log.e("addMapFragment", "onStop ${viewModel.updateKeywordMap.value.toString()} ")
     }
 
 

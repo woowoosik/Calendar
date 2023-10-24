@@ -40,13 +40,7 @@ class CalendarView @JvmOverloads constructor(
 
     }
 
-    /**
-     * Layout
-     */
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-        /*  val iWidth = (width / DAYS_PER_WEEK).toFloat()
-          val iHeight = (height / WEEKS_PER_MONTH).toFloat()*/
-
 
         val iWidth = (dWidth / DateTimeConstants.DAYS_PER_WEEK).toFloat()
         val iHeight = (height / CalendarUtils.WEEKS_PER_MONTH).toFloat()
@@ -62,11 +56,6 @@ class CalendarView @JvmOverloads constructor(
 
     }
 
-    /**
-     * 달력 그리기 시작한다.
-     * @param firstDayOfMonth   한 달의 시작 요일
-     * @param list              달력이 가지고 있는 요일과 이벤트 목록 (총 42개)
-     */
     fun initCalendar(firstDayOfMonth: DateTime, list: List<DateTime>, viewModel: MainViewModel) {
         list.forEach {
             addView(

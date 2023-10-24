@@ -45,9 +45,7 @@ class BottomSheetAddMap : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        Log.w("BottomSheetAddMap", " onCreateVIew")
         binding = DataBindingUtil.inflate(inflater, R.layout.bottomsheet_add_map, container, false)
-
 
         if(viewModel.getSearchKeyList().documents.isEmpty()){
             binding.txt.text = "검색결과가 없습니다."
@@ -56,7 +54,6 @@ class BottomSheetAddMap : BottomSheetDialogFragment() {
         }else{
             binding.recyclerAddMap.visibility = VISIBLE
             binding.txt.visibility = GONE
-            println("adapter ${viewModel.getSearchKeyList().documents[0].place_name}")
 
             val adapter = BottomAddMapAdapter(viewModel.getSearchKeyList())
             binding.recyclerAddMap.layoutManager = LinearLayoutManager(context)
@@ -65,7 +62,6 @@ class BottomSheetAddMap : BottomSheetDialogFragment() {
             adapter.setOnItemClickListener(object:BottomAddMapAdapter.OnItemClickListener{
                 override fun onItemClick(item: KakaoRetrofit.Place) {
                     bottomSheetBehavior!!.state = BottomSheetBehavior.STATE_HIDDEN
-                    println("x : ${item.x.toDouble()}  y : ${item.y.toDouble()}")
                     viewModel.setLocation(item.x.toDouble(), item.y.toDouble())
                 }
 
@@ -85,8 +81,6 @@ class BottomSheetAddMap : BottomSheetDialogFragment() {
 
     override fun onStart() {
         super.onStart()
-
-        // full screen
 
         if (dialog != null) {
             val bottomSheet: View = dialog!!.findViewById(com.google.android.material.R.id.design_bottom_sheet)

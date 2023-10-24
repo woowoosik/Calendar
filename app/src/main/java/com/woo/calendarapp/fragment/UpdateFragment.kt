@@ -39,7 +39,6 @@ import com.woo.calendarapp.R
 import com.woo.calendarapp.databinding.FragmentUpdateBinding
 import com.woo.calendarapp.kakaoApi.KakaoMapUtils.Companion.moveMap
 import com.woo.calendarapp.schedule.Schedule
-import com.woo.calendarapp.utils.ScheduleUtils
 import com.woo.calendarapp.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import net.daum.mf.map.api.MapPOIItem
@@ -85,7 +84,6 @@ class UpdateFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         viewModel = ViewModelProvider(activity as ViewModelStoreOwner)[MainViewModel::class.java]
-        Log.e("onCreate","   ${arguments?.getDouble("x")}  ${arguments?.getDouble("y")}")
 
 
         if(arguments?.getBoolean("isChecked")!!){
@@ -93,16 +91,12 @@ class UpdateFragment : Fragment() {
 
         }
 
-      /*  loadingDialog = LoadingDialog(requireActivity())
-        permissionCheck = PermissionCheck(requireActivity())
-*/
     }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.e("onCreateView", " ")
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_update, container, false)
 
@@ -140,41 +134,26 @@ class UpdateFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        Log.e("onViewCreated", " ")
-
         val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
 
 
-        println("bcolor 1 ${baColor}")
-        println("tcolor 1 ${txtColor}")
-
         binding.startDate.setOnClickListener {
             datePicker(0)
-            println("bcolor 2 ${baColor}")
-            println("tcolor 2 ${txtColor}")
         }
 
         binding.endDate.setOnClickListener {
             datePicker(1)
-            println("bcolor 3 ${baColor}")
-            println("tcolor 3 ${txtColor}")
         }
         binding.barColor.setOnClickListener {
             openColorPicker(0,baColor)
-            println("bcolor 4 ${baColor}")
-            println("tcolor 4 ${txtColor}")
         }
         binding.textColor.setOnClickListener {
             openColorPicker(1,txtColor)
-            println("bcolor 4 ${baColor}")
-            println("tcolor 4 ${txtColor}")
         }
 
 
 
         viewModel.updateComplate.observe(viewLifecycleOwner, EventObserver {
-            Log.e("add observer","")
             fragmentManager.beginTransaction()
                 .remove(this)
                 .commit()
@@ -189,11 +168,6 @@ class UpdateFragment : Fragment() {
                 .commit()
             fragmentManager.popBackStack()
         }
-
-
-
-
-
 
         // 키보드 없애기
         binding.sv1.setOnTouchListener(View.OnTouchListener { _, _ ->
@@ -242,15 +216,6 @@ class UpdateFragment : Fragment() {
 
 
         binding.updateKeywordSearch.setOnClickListener {
-            Log.e("updateKeywordSearch", "")
-
-
-     /*       binding.mapView.removeView(mapView)
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.main, AddMapFragment())
-                .addToBackStack(null)
-                .commit()
-*/
 
             loadingDialog.show()
             binding.mapView.removeView(mapView)
@@ -263,7 +228,6 @@ class UpdateFragment : Fragment() {
 
             addMapFragment.lifecycle.addObserver(LifecycleEventObserver { source, event ->
                 if( event == Lifecycle.Event.ON_RESUME){
-                    Log.e("updateMapFramgnet", "ON_PAUSE dismiss")
                     loadingDialog.dismiss()
                 }
             })
@@ -272,13 +236,10 @@ class UpdateFragment : Fragment() {
 
 
         viewModel.updateKeywordMap.observe(viewLifecycleOwner, EventObserver {
-            Log.e(" updateFragment", " updateKeywordMap   x : ${viewModel.getLocation()!!.first}  y : ${viewModel.getLocation()!!.second}")
             mapLocation = Pair(viewModel.getLocation()!!.first, viewModel.getLocation()!!.second)
             moveMap(viewModel.getLocation()!!.first, viewModel.getLocation()!!.second, mapView)
 
         })
-
-
 
         binding.startDate.text = startDate
         binding.endDate.text = endDate
@@ -378,8 +339,6 @@ class UpdateFragment : Fragment() {
     }
 
     fun updateSchedule(){
-
-        Log.e("updateSchedule", "${baColor}  ${txtColor}")
         viewModel.updateSchedule(
             Schedule(
                 DateTime("${binding.startDate.text}"),
@@ -397,29 +356,6 @@ class UpdateFragment : Fragment() {
             arguments?.getInt("id")!!.toInt()
         )
     }
-
-
-
-/*
-
-
-    fun marker(latitude:Double, longitude:Double , name:String){
-        val marker = MapPOIItem()
-
-        mapView.addPOIItem(marker)
-        //맵 포인트 위도경도 설정
-        //맵 포인트 위도경도 설정
-        val mapPoint = MapPoint.mapPointWithGeoCoord(latitude, longitude)
-        marker.itemName = name
-        marker.tag = 0
-        marker.mapPoint = mapPoint
-        marker.markerType = MapPOIItem.MarkerType.BluePin // 기본으로 제공하는 BluePin 마커 모양.
-
-
-        mapView.addPOIItem(marker)
-
-    }
-*/
 
 
     @SuppressLint("MissingPermission")
@@ -460,23 +396,12 @@ class UpdateFragment : Fragment() {
                 }
             }
         }
-/*
-    fun moveMap( longitude:Double ,latitude:Double) {
-        Log.e("addFragment ", " move 1 ${mapLocation}")
-        Log.e("addFragment ", " move 2 ${viewModel.getLocation()}")
-        Log.e("addFragment ", " move 3 ${longitude}  $latitude")
-        val mp = MapPoint.mapPointWithGeoCoord(latitude, longitude)
-        mapView.setMapCenterPoint(mp, true)
-        mapView.setZoomLevel(1, true)
-        marker(latitude, longitude, "pick")
-    }*/
 
 
     override fun onStart() {
         super.onStart()
 
         if(binding.mapView.isEmpty()){
-            Log.e("onStart" , " update Fragment")
             getMap()
         }
 
@@ -484,7 +409,6 @@ class UpdateFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
-        Log.e("onStop" , " update Fragment")
         // binding.mapView.removeView(mapView)
         binding.mapView.removeAllViews()
     }

@@ -9,7 +9,6 @@ import org.joda.time.DateTime
 
 class MainFragmentAdapter(fm:FragmentActivity) : FragmentStateAdapter(fm)  {
 
-    /* 달의 첫 번째 Day timeInMillis*/
     private var start: Long = DateTime().withDayOfMonth(1).withTimeAtStartOfDay().millis
 
     override fun getItemCount(): Int = Int.MAX_VALUE

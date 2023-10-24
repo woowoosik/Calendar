@@ -21,15 +21,6 @@ interface Repository {
 
     suspend fun getSearchKeyword(keyword:String) : KakaoRetrofit.ResultSearchKeyword
 
-/*
 
-    suspend fun setSchedule(title:String, content:String)
-
-    suspend fun getSchedule(id:Int) : LiveData<Schedule>
-
-    suspend fun getAllData() : List<Schedule>
-
-    fun getTestList() : List<Schedule>
-*/
 
 }

@@ -65,11 +65,8 @@ class BottomSheetFragmentChild : BottomSheetDialogFragment() {
 
         mainViewModel = ViewModelProvider(activity as ViewModelStoreOwner)[MainViewModel::class.java]
 
-
         mapLocation = Pair(arguments?.getDouble("x"), arguments?.getDouble("y")) as Pair<Double, Double>
 
-
-       // permissionCheck = PermissionCheck(requireActivity())
     }
 
     override fun onCreateView(
@@ -84,11 +81,6 @@ class BottomSheetFragmentChild : BottomSheetDialogFragment() {
         binding.bottomChildContent.text=arguments?.getString("content")
         binding.bottomChildStartDate.text = arguments?.getString("start")
         binding.bottomChildEndDate.text = arguments?.getString("end")
-
-        Log.e("framgnet Child ", " ${arguments?.getDouble("x")}  ${arguments?.getDouble("y")}")
-        Log.e("framgnet Child ", "${arguments?.getBoolean("isChecked")}")
-
-
 
         var bgShape : GradientDrawable = binding.bottomChildTitle.background as GradientDrawable
         arguments?.getInt("barColor")?.let { bgShape.setColor(it) }
@@ -120,12 +112,7 @@ class BottomSheetFragmentChild : BottomSheetDialogFragment() {
         binding.bottomChildUpdate.setOnClickListener {
             bottomSheetBehavior!!.state = BottomSheetBehavior.STATE_HIDDEN
             mainViewModel.updateOpen()
-            println(" 수정하기 ")
-            println(" - ${arguments?.getInt("id")}")
-            println(" - ${arguments?.getInt("barColor")}")
-            println(" - ${arguments?.getInt("textColor")}")
-            println(" x ${arguments?.getDouble("x")}")
-            println(" y ${arguments?.getDouble("y")}")
+
             val bundle = Bundle()
             bundle.putInt("id", arguments?.getInt("id")!!.toInt())
             bundle.putString("start", arguments?.getString("start"))
@@ -149,14 +136,8 @@ class BottomSheetFragmentChild : BottomSheetDialogFragment() {
 
         }
 
-
-
-        println("child : 들어가기 전 argu ${arguments?.getDouble("x")}  ${arguments?.getDouble("y")}")
-        println(" child : 들어가기 전 mapLocation ${mapLocation.first}, ${mapLocation.second} ")
-
         getMap()
 
-        println(" child : isChecked  ${arguments?.getBoolean("isChecked")} ")
         if(arguments?.getBoolean("isChecked") == true){
             mapView.visibility = View.VISIBLE
         }else{
@@ -165,88 +146,6 @@ class BottomSheetFragmentChild : BottomSheetDialogFragment() {
         }
 
     }
-
-
-   /* fun marker(latitude:Double, longitude:Double , name:String){
-        val marker = MapPOIItem()
-
-        mapView.addPOIItem(marker)
-        //맵 포인트 위도경도 설정
-        //맵 포인트 위도경도 설정
-        val mapPoint = MapPoint.mapPointWithGeoCoord(latitude, longitude)
-        marker.itemName = name
-        marker.tag = 0
-        marker.mapPoint = mapPoint
-        marker.markerType = MapPOIItem.MarkerType.BluePin // 기본으로 제공하는 BluePin 마커 모양.
-
-
-        mapView.addPOIItem(marker)
-
-    }
-
-
-
-    fun getMap(){
-        mapView = MapView(requireActivity())
-        binding.mapView.addView(mapView)
-
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-
-            println(" permission if ")
-            if (!this::mapLocation.isInitialized ) {
-                fusedLocationClient.lastLocation
-                    .addOnSuccessListener { location: Location? ->
-                        println(" location +-  ${location}")
-                        mapLocation = Pair(location!!.longitude, location!!.latitude)
-
-                    }
-            }
-
-        }else{
-            println(" permission else ")
-            val locationPermissionRequest = registerForActivityResult(
-                ActivityResultContracts.RequestMultiplePermissions()
-            ) { permissions ->
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    when {
-                        permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
-
-                        }
-                        permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
-
-                        } else -> {
-
-                    }
-                    }
-                }
-            }
-
-            locationPermissionRequest.launch(arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION))
-        }
-
-        Log.e("Fragment child", "${mapLocation.first}, ${mapLocation.second} ")
-        moveMap(mapLocation.first, mapLocation.second)
-
-    }
-
-
-    fun moveMap( longitude:Double ,latitude:Double) {
-        val mp = MapPoint.mapPointWithGeoCoord(latitude, longitude)
-        mapView.setMapCenterPoint(mp, true)
-        mapView.setZoomLevel(1, true)
-        marker(latitude, longitude, "pick")
-    }
-
-*/
 
     @SuppressLint("MissingPermission")
     fun getMap(){
