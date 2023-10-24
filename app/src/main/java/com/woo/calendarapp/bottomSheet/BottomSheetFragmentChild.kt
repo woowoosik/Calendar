@@ -29,17 +29,21 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCa
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import com.woo.calendarapp.EventObserver
+import com.woo.calendarapp.LoadingDialog
 import com.woo.calendarapp.PermissionCheck
 import com.woo.calendarapp.R
 import com.woo.calendarapp.databinding.BottomsheetChildBinding
 import com.woo.calendarapp.fragment.UpdateFragment
 import com.woo.calendarapp.kakaoApi.KakaoMapUtils
 import com.woo.calendarapp.viewmodel.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
+import javax.inject.Inject
 
 
+@AndroidEntryPoint
 class BottomSheetFragmentChild : BottomSheetDialogFragment() {
     private lateinit var mainViewModel : MainViewModel
     private lateinit var binding : BottomsheetChildBinding
@@ -51,9 +55,10 @@ class BottomSheetFragmentChild : BottomSheetDialogFragment() {
 
     private lateinit var mapLocation : Pair<Double,Double>
 
-
-
-    private lateinit var permissionCheck : PermissionCheck
+    @Inject
+    lateinit var loadingDialog: LoadingDialog
+    @Inject
+    lateinit var permissionCheck : PermissionCheck
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +69,7 @@ class BottomSheetFragmentChild : BottomSheetDialogFragment() {
         mapLocation = Pair(arguments?.getDouble("x"), arguments?.getDouble("y")) as Pair<Double, Double>
 
 
-        permissionCheck = PermissionCheck(requireActivity())
+       // permissionCheck = PermissionCheck(requireActivity())
     }
 
     override fun onCreateView(

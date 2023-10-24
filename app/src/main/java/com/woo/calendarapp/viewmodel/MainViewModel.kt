@@ -169,7 +169,6 @@ class MainViewModel @Inject constructor(
         println("updateSchedule : id :${id}")
         println("updateSchedule : id :${schedule.id}")
         println("updateSchedule : ${schedule}")
-        println("updateSchedule : ${schedule.isChecked}")
         viewModelScope.launch(Dispatchers.IO) { //코루틴
 
             // 활성화 dispatcherIO는 백그라운드에서 실행

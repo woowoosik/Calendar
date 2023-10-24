@@ -15,10 +15,13 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.qualifiers.ActivityContext
+import javax.inject.Inject
 
 
-class PermissionCheck(context: Context) {
-    private var context = context
+class PermissionCheck @Inject constructor(
+        private val context: Context
+    ) {
 
     val permission = arrayOf(
         Manifest.permission.ACCESS_COARSE_LOCATION,

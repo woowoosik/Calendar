@@ -57,6 +57,7 @@ class BottomSheetAddMap : BottomSheetDialogFragment() {
             binding.recyclerAddMap.visibility = VISIBLE
             binding.txt.visibility = GONE
             println("adapter ${viewModel.getSearchKeyList().documents[0].place_name}")
+
             val adapter = BottomAddMapAdapter(viewModel.getSearchKeyList())
             binding.recyclerAddMap.layoutManager = LinearLayoutManager(context)
             binding.recyclerAddMap.adapter = adapter

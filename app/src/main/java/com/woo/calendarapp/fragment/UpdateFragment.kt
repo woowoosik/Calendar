@@ -41,13 +41,17 @@ import com.woo.calendarapp.kakaoApi.KakaoMapUtils.Companion.moveMap
 import com.woo.calendarapp.schedule.Schedule
 import com.woo.calendarapp.utils.ScheduleUtils
 import com.woo.calendarapp.viewmodel.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
 import org.joda.time.DateTime
 import yuku.ambilwarna.AmbilWarnaDialog
 import java.util.*
+import javax.inject.Inject
 
+
+@AndroidEntryPoint
 class UpdateFragment : Fragment() {
 
     private lateinit var binding : FragmentUpdateBinding
@@ -70,9 +74,10 @@ class UpdateFragment : Fragment() {
     private lateinit var startDate :String
     private lateinit var endDate :String
 
-    private lateinit var loadingDialog: LoadingDialog
-
-    private lateinit var permissionCheck : PermissionCheck
+    @Inject
+    lateinit var loadingDialog: LoadingDialog
+    @Inject
+    lateinit var permissionCheck : PermissionCheck
 
     private val cal = Calendar.getInstance()
 
@@ -88,9 +93,9 @@ class UpdateFragment : Fragment() {
 
         }
 
-        loadingDialog = LoadingDialog(requireActivity())
+      /*  loadingDialog = LoadingDialog(requireActivity())
         permissionCheck = PermissionCheck(requireActivity())
-
+*/
     }
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -127,10 +132,6 @@ class UpdateFragment : Fragment() {
 
         // 아래 fragment 터치 막기
         binding.layout.isClickable = true
-
-
-
-
 
 
         return binding.root

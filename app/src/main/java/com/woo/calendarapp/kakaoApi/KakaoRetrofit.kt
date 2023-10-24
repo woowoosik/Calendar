@@ -49,93 +49,6 @@ class KakaoRetrofit{
 
 
     fun searchKeyword(keyword: String) : ResultSearchKeyword {
-/*
-        var result = ResultSearchKeyword(listOf())
-        runBlocking {
-            //코루틴
-
-            // 활성화 dispatcherIO는 백그라운드에서 실행
-            val job = GlobalScope.launch(Dispatchers.Default) {
-
-                val retrofit = Retrofit.Builder() // Retrofit 구성
-                    .baseUrl("https://dapi.kakao.com/")
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build()
-                val api = retrofit.create(KakaoAPI::class.java) // 통신 인터페이스를 객체로 생성
-                val call =
-                    api.getSearchKeyword("KakaoAK 52109dafc4fdea8d693a1cfb2a51d9f3", keyword) // 검색 조건 입력
-
-                // API 서버에 요청
-                call.enqueue(object : Callback<ResultSearchKeyword> {
-                    override fun onResponse(
-                        call: Call<ResultSearchKeyword>,
-                        response: Response<ResultSearchKeyword>
-                    ) {
-                        // 통신 성공 (검색 결과는 response.body()에 담겨있음)
-                        Log.w("MainActivity", "통신 성공: ${response}")
-                        Log.d("Test", "Raw: ${response.raw()}")
-                        Log.d("Test", "Body: ${response.body()}")
-                        result = response.body()!!
-                        return result
-                    }
-
-                    override fun onFailure(call: Call<ResultSearchKeyword>, t: Throwable) {
-                        // 통신 실패
-                        Log.w("MainActivity", "통신 실패: ${t.message}")
-
-                        return result
-                    }
-                })
-
-            }
-            job.join()
-
-
-        }
-
-
-        return result*/
-
-/*
-
-        val baseUrl = "https://dapi.kakao.com/"
-        val retrofit = Retrofit.Builder()
-            .baseUrl(baseUrl)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val api = retrofit.create(KakaoAPI::class.java) // 통신 인터페이스를 객체로 생성
-        val call =
-            api.getSearchKeyword("KakaoAK 52109dafc4fdea8d693a1cfb2a51d9f3", keyword, 45) // 검색 조건 입력
-
-
-        var result = ResultSearchKeyword(listOf())
-        val response = call.execute()
-        println("CoroutineScope 1")
-        CoroutineScope(Dispatchers.IO).launch{
-            val job = CoroutineScope(Dispatchers.Default).launch {
-                val body = response.body()
-
-                println("CoroutineScope 2")
-                if (response.isSuccessful) {
-                    if (body != null) {
-                        result = body
-                        println("CoroutineScope 3  ${response}")
-                        println("CoroutineScope 4 ${result.documents.size }    ${result.documents[0].place_name}")
-                    }
-                } else {
-                    Log.d("Retrofit", "이미지 찾기 | 통신 실패")
-                }
-            }
-            job.join()
-
-        }
-
-        println("CoroutineScope 5")
-*/
-
-
-
 
         val key = "KakaoAK 52109dafc4fdea8d693a1cfb2a51d9f3"
         val baseUrl = "https://dapi.kakao.com/"
@@ -155,25 +68,19 @@ class KakaoRetrofit{
                     api.getSearchKeyword(key, keyword.replace("\\s".toRegex(),""),  i+1,size) // 검색 조건 입력
 
                 val response = call.execute()
-                println("CoroutineScope 1")
                 CoroutineScope(Dispatchers.Main).launch {
                     val job = CoroutineScope(Dispatchers.Main).launch {
                         val body = response.body()
-
-                        println("CoroutineScope 2")
                         if (response.isSuccessful) {
                             if (body != null ) {
                                 if(i==0 || (list.size>size-1 && list[(i-1)*size].id != body.documents[0].id)){
                                     for(i in 0 until body.documents.size){
                                         list.add(body.documents[i])
                                     }
-                                    println("${response.body()}")
                                 }
-
-                                //    println("CoroutineScope 3 ${searchKeyList.documents.size}    ${searchKeyList.documents[0].place_name}")
                             }
                         } else {
-                            Log.d("Retrofit", "이미지 찾기 | 통신 실패")
+                            Log.d("Retrofit", " 통신 실패")
                         }
                     }
                     job.join()

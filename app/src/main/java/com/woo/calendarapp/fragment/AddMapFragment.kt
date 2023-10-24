@@ -28,6 +28,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.woo.calendarapp.EventObserver
 import com.woo.calendarapp.LoadingDialog
+import com.woo.calendarapp.PermissionCheck
 import com.woo.calendarapp.R
 import com.woo.calendarapp.adapter.BottomRecyclerAdapter
 import com.woo.calendarapp.bottomSheet.BottomSheetAddMap
@@ -35,11 +36,15 @@ import com.woo.calendarapp.databinding.FragmentAddMapBinding
 import com.woo.calendarapp.schedule.Schedule
 import com.woo.calendarapp.utils.ScheduleUtils
 import com.woo.calendarapp.viewmodel.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
+import javax.inject.Inject
 
+
+@AndroidEntryPoint
 class AddMapFragment : Fragment() {
 
     private lateinit var binding : FragmentAddMapBinding
@@ -52,7 +57,10 @@ class AddMapFragment : Fragment() {
     private lateinit var mapLocation : Pair<Double,Double>
 
 
-    private lateinit var loadingDialog: LoadingDialog
+    @Inject
+    lateinit var loadingDialog: LoadingDialog
+    @Inject
+    lateinit var permissionCheck : PermissionCheck
 
 /*
 
@@ -81,7 +89,7 @@ class AddMapFragment : Fragment() {
         //kakao map
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
-        loadingDialog = LoadingDialog(requireActivity())
+        // loadingDialog = LoadingDialog(requireActivity())
 
 
         getMap()

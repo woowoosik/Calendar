@@ -51,6 +51,7 @@ import net.daum.mf.map.api.MapView
 import org.joda.time.DateTime
 import yuku.ambilwarna.AmbilWarnaDialog
 import java.util.*
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -74,10 +75,10 @@ class AddFragment : Fragment() {
     private lateinit var startDate :String
     private lateinit var endDate :String
 
-    private lateinit var loadingDialog: LoadingDialog
-
-    private lateinit var permissionCheck : PermissionCheck
-
+    @Inject
+    lateinit var loadingDialog: LoadingDialog
+    @Inject
+    lateinit var permissionCheck : PermissionCheck
 
     private val cal = Calendar.getInstance()
 
@@ -94,15 +95,8 @@ class AddFragment : Fragment() {
         binding.fragment = this@AddFragment
 
 
-        loadingDialog = LoadingDialog(requireActivity())
-        permissionCheck = PermissionCheck(requireActivity())
-
         return binding.root
     }
-
-
-
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

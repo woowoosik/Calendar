@@ -56,7 +56,12 @@ class MainActivity : AppCompatActivity(){
 
         mainBinding.tb.addSchedule.setOnClickListener {
             Log.e("MaingActivity"," 스케쥴 추가 이동 ")
-            supportFragmentManager.beginTransaction()
+
+          //  val addFragment = AddFragment()
+           /* addFragment.loadingDialog = LoadingDialog(this)
+            addFragment.permissionCheck = PermissionCheck(this)
+*/
+           supportFragmentManager.beginTransaction()
                 .replace(R.id.main, AddFragment())
                 .addToBackStack(null)
                 .commit()
