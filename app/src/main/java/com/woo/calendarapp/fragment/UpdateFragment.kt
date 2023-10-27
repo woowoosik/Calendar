@@ -121,7 +121,7 @@ class UpdateFragment : Fragment() {
         startDate = arguments?.getString("start")!!
         endDate = arguments?.getString("end")!!
 
-        getMap()
+       // getMap()
 
 
         // 아래 fragment 터치 막기
@@ -209,6 +209,7 @@ class UpdateFragment : Fragment() {
                 binding.mapView.removeView(mapView)
                 getMap()
             }else{
+                Snackbar.make(binding.root, "권한이 거절되어있습니다. 스마트폰 설정에서 애플리케이션 권한을 허용해주세요.", Snackbar.LENGTH_SHORT).show()
                 binding.updatePlaceSwitch.isChecked = false
                 binding.updateKeywordMap.visibility = View.GONE
             }
@@ -386,13 +387,13 @@ class UpdateFragment : Fragment() {
             permissions.entries.forEach { permission ->
                 when {
                     permission.value -> {
-                        Snackbar.make(binding.root, "설정에서 권한을 허용해주세요. ", Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(binding.root, "설정에서 권한을 허용했습니다 ", Snackbar.LENGTH_SHORT).show()
                     }
                     shouldShowRequestPermissionRationale(permission.key) -> {
                         Snackbar.make(binding.root,
                             "권한설정 확인", Snackbar.LENGTH_SHORT).show()
                     }
-                    else -> Snackbar.make(binding.root, "권한이 거절되어있습니다. 설정에서 허용해주세요.", Snackbar.LENGTH_SHORT).show()
+                    else -> Snackbar.make(binding.root, "권한이 거절되어있습니다. 스마트폰 설정에서 애플리케이션 권한을 허용해주세요.", Snackbar.LENGTH_SHORT).show()
                 }
             }
         }

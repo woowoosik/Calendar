@@ -35,7 +35,6 @@ class MainFragment: Fragment() {
     private lateinit var listAll :  Array<Array<Array<Schedulebar>>>
 
 
-
     private var millis: Long = 0L
 
     companion object {
@@ -49,8 +48,6 @@ class MainFragment: Fragment() {
     }
 
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -58,11 +55,6 @@ class MainFragment: Fragment() {
         }
 
     }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
-
 
 
     override fun onCreateView(
@@ -97,11 +89,14 @@ class MainFragment: Fragment() {
         return mainFragmentBinding.root
     }
 
+
     override fun onResume() {
         super.onResume()
         mainViewModel.setDate(DateTime(millis).toString("yyyy-MM"))
 
     }
+
+
 
    /* fun showBottomSheet(){
         val bottomSheetFragment = BottomSheetFragment()
@@ -124,27 +119,17 @@ class MainFragment: Fragment() {
     fun getSchedulebar(){
         listAll = mainViewModel.getSchedulebarData(getMonthList(DateTime(millis)))
 
-        listAll.forEachIndexed{ idx , it__ ->
-            listAll[idx].forEachIndexed { index, it ->
-                println(" ")
-                listAll[idx][index].forEachIndexed { index_, it_ ->
-                    print("    ${listAll[idx][index][index_].title}     ")
-                }
-            }
-            println("")
-        }
-
         val dWidth = resources.displayMetrics.widthPixels
         val dHeight = resources.displayMetrics.heightPixels
 
         var h = dHeight / 42
         var _width = dWidth / 7
         val margin = 3
-
+        val topMargin = 5
         var length = 0
 
         listAll.forEachIndexed { index, _ ->
-            var _height = h * (index * 7) - ((index - 1) * h) + index  // h * (index * 7) - ((index-1) * h )
+            var _height = h * (index * 7) - ((index - 1) * h) + (index*topMargin)  // h * (index * 7) - ((index-1) * h )
 
             listAll[index].forEachIndexed { index_, it_ ->
                 listAll[index][index_].forEachIndexed { index_2, it_2 ->

@@ -151,25 +151,6 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun getMonthDate(month:List<DateTime>){
-
-        println("${month[0] }   ${month[month.size-1]}")
-
-        viewModelScope.launch(Dispatchers.IO) {
-            println(" getMonthDate 1 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-            CoroutineScope(Dispatchers.IO).async {
-                monthScheduleList = repo.getRoomMonthDate(
-                    month[0],
-                    month[month.size-1]
-                )
-            }.await()
-            monthScheduleList.forEachIndexed { ind, it->
-                println("${monthScheduleList[ind]}")
-            }
-            println(" getMonthDate 2 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-        }
-    }
-
 
     lateinit var dayScheduleList : MutableList<Schedule>
     fun daySchedule(date: DateTime):List<Schedule>{

@@ -21,6 +21,8 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isEmpty
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -97,7 +99,7 @@ class BottomSheetFragmentChild : BottomSheetDialogFragment() {
             isSelected = true
         }
 
-
+        binding.mapView.layoutParams.height = resources.displayMetrics.heightPixels/3
 
         return binding.root
     }
@@ -110,6 +112,8 @@ class BottomSheetFragmentChild : BottomSheetDialogFragment() {
         val updateFragment = UpdateFragment()
 
         binding.bottomChildUpdate.setOnClickListener {
+            loadingDialog.show()
+
             bottomSheetBehavior!!.state = BottomSheetBehavior.STATE_HIDDEN
             mainViewModel.updateOpen()
 
@@ -134,11 +138,18 @@ class BottomSheetFragmentChild : BottomSheetDialogFragment() {
 
             binding.mapView.removeAllViews()
 
+            updateFragment.lifecycle.addObserver(LifecycleEventObserver { source, event ->
+                if( event == Lifecycle.Event.ON_RESUME){
+                    loadingDialog.dismiss()
+                }
+            })
+
+
         }
 
         getMap()
 
-        if(arguments?.getBoolean("isChecked") == true){
+        if(permissionCheck.isAllPermissionsGranted() && arguments?.getBoolean("isChecked") == true){
             mapView.visibility = View.VISIBLE
         }else{
             mapView.visibility = View.GONE

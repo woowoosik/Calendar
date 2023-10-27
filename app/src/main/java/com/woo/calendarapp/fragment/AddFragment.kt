@@ -93,6 +93,7 @@ class AddFragment : Fragment() {
         binding.mainViewModel = viewModel
         binding.fragment = this@AddFragment
 
+        binding.mapView.layoutParams.height = resources.displayMetrics.heightPixels/3
 
         return binding.root
     }
@@ -112,6 +113,7 @@ class AddFragment : Fragment() {
 
         //kakao map
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+
 
 
         if(!this::startDate.isInitialized){
@@ -222,12 +224,6 @@ class AddFragment : Fragment() {
 
         })
 
-
-
-
-
-
-
         //keyword map
         binding.placeSwitch.setOnCheckedChangeListener { _, b ->
 
@@ -238,11 +234,11 @@ class AddFragment : Fragment() {
                 binding.mapView.removeView(mapView)
                 getMap()
             }else{
+                Snackbar.make(binding.root, "권한이 거절되어있습니다. 스마트폰 설정에서 애플리케이션 권한을 허용해주세요.", Snackbar.LENGTH_SHORT).show()
                 binding.placeSwitch.isChecked = false
                 binding.addKeywordMap.visibility = GONE
             }
         }
-
 
 
 
@@ -252,13 +248,16 @@ class AddFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-
+/*
+        if(permissionCheck.isAllPermissionsGranted() ){
+            if(binding.mapView.isEmpty()){
+                getMap()
+            }
+        }*/
         if(binding.mapView.isEmpty()){
             getMap()
         }
     }
-
-
 
 
     override fun onStop() {
@@ -401,13 +400,13 @@ class AddFragment : Fragment() {
             permissions.entries.forEach { permission ->
                 when {
                     permission.value -> {
-                        Snackbar.make(binding.root, "설정에서 권한을 허용해주세요. ", Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(binding.root, "설정에서 권한을 허용했습니다 ", Snackbar.LENGTH_SHORT).show()
                     }
                     shouldShowRequestPermissionRationale(permission.key) -> {
                         Snackbar.make(binding.root,
                             "권한설정 확인", Snackbar.LENGTH_SHORT).show()
                     }
-                    else -> Snackbar.make(binding.root, "권한이 거절되어있습니다. 설정에서 허용해주세요.", Snackbar.LENGTH_SHORT).show()
+                    else -> Snackbar.make(binding.root, "권한이 거절되어있습니다. 스마트폰 설정에서 애플리케이션 권한을 허용해주세요.", Snackbar.LENGTH_SHORT).show()
                 }
             }
         }
