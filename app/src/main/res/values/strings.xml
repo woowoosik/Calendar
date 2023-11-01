@@ -7,7 +7,7 @@
 
     <string name="bottomsheet_child_update">수정</string>
 
-    <string name="dialog_loading_txt">Loading ...</string>
+    <string name="dialog_loading_txt">Loading……</string>
 
     <string name="fragment_add_title">제목</string>
     <string name="fragment_add_content">메모</string>
