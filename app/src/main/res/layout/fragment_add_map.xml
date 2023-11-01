@@ -91,7 +91,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/bottonColor"
             android:background="#00ff0000"
-            android:text="@string/fragment_add_map_update_map" />
+            android:text="@string/fragment_add_add_btn" />
 
 
         <Button
@@ -103,7 +103,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/cancelBottonColor"
             android:background="#00ff0000"
-            android:text="@string/fragment_add_map_cancel" />
+            android:text="@string/fragment_add_cancel_btn" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

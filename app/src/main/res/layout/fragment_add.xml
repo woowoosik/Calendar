@@ -285,18 +285,18 @@
 
         </androidx.core.widget.NestedScrollView>
 
+
         <Button
             android:id="@+id/add_schedule"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/add_cancel"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/bottonColor"
             android:background="#00ff0000"
             android:onClick="@{()-> fragment.addSchedule()}"
-            android:text="@string/fragment_add_add_btn" />
-
+            android:text="@string/fragment_add_add_btn"
+            android:textColor="@color/bottonColor"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/add_cancel"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/add_cancel"

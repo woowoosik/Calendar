@@ -13,14 +13,12 @@
     <string name="fragment_add_content">메모</string>
     <string name="fragment_add_map">위치</string>
     <string name="fragment_add_keyword_search">검색</string>
-    <string name="fragment_add_add_btn">검색</string>
-    <string name="fragment_add_cancel_btn">검색</string>
+
+    <string name="fragment_add_add_btn">확인</string>
+    <string name="fragment_add_cancel_btn">취소</string>
 
     <string name="fragment_add_map_et_map_search">키워드</string>
     <string name="fragment_add_map_bt_place">현재 위치</string>
-
-    <string name="fragment_add_map_update_map">확인</string>
-    <string name="fragment_add_map_cancel">취소</string>
 
     <string name="fragment_update_btn">수정</string>
 
