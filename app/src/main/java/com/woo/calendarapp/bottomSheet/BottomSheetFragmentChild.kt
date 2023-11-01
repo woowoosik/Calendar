@@ -1,21 +1,16 @@
 package com.woo.calendarapp.bottomSheet
 
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.location.Location
-import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
@@ -75,7 +70,7 @@ class BottomSheetFragmentChild : BottomSheetDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.bottomsheet_child, container, false)
 
@@ -114,7 +109,7 @@ class BottomSheetFragmentChild : BottomSheetDialogFragment() {
         binding.bottomChildUpdate.setOnClickListener {
             loadingDialog.show()
 
-            bottomSheetBehavior!!.state = BottomSheetBehavior.STATE_HIDDEN
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             mainViewModel.updateOpen()
 
             val bundle = Bundle()
@@ -167,7 +162,7 @@ class BottomSheetFragmentChild : BottomSheetDialogFragment() {
             if( !this::mapLocation.isInitialized ){
                 fusedLocationClient.lastLocation
                     .addOnSuccessListener { location : Location? ->
-                        mapLocation = Pair(location!!.longitude, location!!.latitude)
+                        mapLocation = Pair(location!!.longitude, location.latitude)
                     }
             }else{
                 KakaoMapUtils.moveMap(mapLocation.first, mapLocation.second, mapView)
@@ -212,7 +207,7 @@ class BottomSheetFragmentChild : BottomSheetDialogFragment() {
 
         val view = view
         view!!.post{
-            val parent = view!!.parent as View
+            val parent = view.parent as View
             val params = parent.layoutParams as CoordinatorLayout.LayoutParams
             val behavior = params.behavior
             bottomSheetBehavior = behavior as BottomSheetBehavior<*>

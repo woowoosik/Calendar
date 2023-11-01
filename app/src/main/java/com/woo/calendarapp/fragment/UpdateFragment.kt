@@ -1,25 +1,19 @@
 package com.woo.calendarapp.fragment
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Context
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.location.Location
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.content.ContextCompat
 import androidx.core.view.isEmpty
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -30,7 +24,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import com.woo.calendarapp.EventObserver
 import com.woo.calendarapp.LoadingDialog
@@ -41,12 +34,9 @@ import com.woo.calendarapp.kakaoApi.KakaoMapUtils.Companion.moveMap
 import com.woo.calendarapp.schedule.Schedule
 import com.woo.calendarapp.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import net.daum.mf.map.api.MapPOIItem
-import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
 import org.joda.time.DateTime
 import yuku.ambilwarna.AmbilWarnaDialog
-import java.util.*
 import javax.inject.Inject
 
 
@@ -78,7 +68,6 @@ class UpdateFragment : Fragment() {
     @Inject
     lateinit var permissionCheck : PermissionCheck
 
-    private val cal = Calendar.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,7 +85,7 @@ class UpdateFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_update, container, false)
 
@@ -181,7 +170,7 @@ class UpdateFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int){
                 if(s.isEmpty()){
-                    binding.updateSchedulebar.text = "Schedule Bar"
+                    binding.updateSchedulebar.text = getString(R.string.schedulebar)
                 }else{
                     binding.updateSchedulebar.text = s
                 }
@@ -260,6 +249,7 @@ class UpdateFragment : Fragment() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     fun datePicker(b:Int){   //캘린더뷰 만들기
         val startDate = DateTime("${binding.startDate.text}")
         val endDate = DateTime("${binding.endDate.text}")
@@ -368,9 +358,9 @@ class UpdateFragment : Fragment() {
             if( !this::mapLocation.isInitialized ){
                 fusedLocationClient.lastLocation
                     .addOnSuccessListener { location : Location? ->
-                        mapLocation = Pair(location!!.longitude, location!!.latitude)
-                        viewModel.setLocation(location!!.longitude, location!!.latitude)
-                        moveMap(location!!.longitude, location!!.latitude, mapView)
+                        mapLocation = Pair(location!!.longitude, location.latitude)
+                        viewModel.setLocation(location.longitude, location.latitude)
+                        moveMap(location.longitude, location.latitude, mapView)
 
                     }
             }else{

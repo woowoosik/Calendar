@@ -1,6 +1,5 @@
 package com.woo.calendarapp.schedule
 
-import android.content.Context
 import androidx.room.*
 
 @Database(entities = [Schedule::class], version = 3)

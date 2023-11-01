@@ -29,8 +29,8 @@
             android:gravity="center"
             android:maxLines="1"
             android:singleLine="true"
-            android:text="Schedule Bar"
-            android:textSize="20dp"
+            android:text="@string/schedulebar"
+            android:textSize="@dimen/fragment_add_txt_size"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/guide_line_1"
             app:layout_constraintEnd_toStartOf="@+id/guide_line_4"
@@ -52,7 +52,8 @@
             android:background="@drawable/button_circle"
             app:layout_constraintBottom_toTopOf="@+id/guide_line_1"
             app:layout_constraintStart_toEndOf="@+id/guide_line_4"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
 
         <ImageView
             android:id="@+id/text_color"
@@ -62,7 +63,8 @@
             app:layout_constraintBottom_toTopOf="@+id/guide_line_1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/bar_color"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
 
 
         <androidx.constraintlayout.widget.Guideline
@@ -77,11 +79,10 @@
             android:id="@+id/start_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:padding="10dp"
+            android:padding="@dimen/fragment_add_date_padding"
+            android:textSize="@dimen/fragment_add_date_txt_size"
             android:gravity="center"
             android:textStyle="bold"
-            android:text="시작 날짜"
-            android:textSize="20dp"
             app:layout_constraintBottom_toTopOf="@+id/guide_line_2"
             app:layout_constraintEnd_toStartOf="@+id/end_date"
             app:layout_constraintStart_toStartOf="parent"
@@ -91,11 +92,10 @@
             android:id="@+id/end_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:padding="10dp"
+            android:padding="@dimen/fragment_add_date_padding"
+            android:textSize="@dimen/fragment_add_date_txt_size"
             android:gravity="center"
             android:textStyle="bold"
-            android:text="마지막 날짜"
-            android:textSize="20dp"
             app:layout_constraintBottom_toTopOf="@+id/guide_line_2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/start_date"
@@ -137,10 +137,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:textSize="20dp"
+                    android:textSize="@dimen/fragment_add_txt_line_size"
                     android:textStyle="bold"
                     android:textColor="@color/line_text"
-                    android:text="제목"
+                    android:text="@string/fragment_add_title"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toTopOf="@id/et_title"
@@ -162,7 +162,9 @@
                     android:id="@+id/et_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="30dp"
+                    android:textSize="@dimen/fragment_add_et_size"
+                    android:layout_marginStart="@dimen/fragment_add_et_margin"
+                    android:layout_marginEnd="@dimen/fragment_add_et_margin"
                     android:background="@null"
                     app:layout_constraintTop_toBottomOf="@id/title_line"
                     app:layout_constraintBottom_toTopOf="@+id/content_line"/>
@@ -173,10 +175,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:textSize="20dp"
                     android:textStyle="bold"
                     android:textColor="@color/line_text"
-                    android:text="메모"
+                    android:textSize="@dimen/fragment_add_txt_line_size"
+                    android:text="@string/fragment_add_content"
                     app:layout_constraintTop_toBottomOf="@id/et_title"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toTopOf="@id/et_content"
@@ -196,7 +198,9 @@
                     android:id="@+id/et_content"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textSize="30dp"
+                    android:layout_marginStart="@dimen/fragment_add_et_margin"
+                    android:layout_marginEnd="@dimen/fragment_add_et_margin"
+                    android:textSize="@dimen/fragment_add_et_size"
                     android:background="@null"
                     app:layout_constraintTop_toBottomOf="@+id/content_line"
                     />
@@ -205,14 +209,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="위치"
-                    android:textSize="20dp"
-                    android:paddingStart="15dp"
+                    android:text="@string/fragment_add_map"
+                    android:textSize="@dimen/fragment_add_map_txt_size"
+                    android:paddingStart="@dimen/fragment_add_map_padding"
                     android:textStyle="bold"
                     android:textColor="@color/line_text"
                     app:layout_constraintTop_toBottomOf="@+id/et_content"
                     app:layout_constraintStart_toStartOf="parent"
-                    />
+                    tools:ignore="RtlSymmetry" />
 
                 <Switch
                     android:id="@+id/updatePlaceSwitch"
@@ -221,7 +225,8 @@
                     android:paddingEnd="15dp"
                     android:theme="@style/Switch"
                     app:layout_constraintTop_toBottomOf="@+id/et_content"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:ignore="RtlSymmetry,UseSwitchCompatOrMaterialXml" />
 
 
 
@@ -244,10 +249,10 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         android:background="@drawable/button"
                         android:gravity="center"
-                        android:textSize="10dp"
                         android:textStyle="bold"
                         android:textColor="@color/black"
-                        android:text="검색"/>
+                        android:textSize="@dimen/fragment_add_map_keyword_search_txt_size"
+                        android:text="@string/fragment_add_keyword_search"/>
 
 
 
@@ -285,7 +290,7 @@
             android:textColor="@color/bottonColor"
             android:background="#00ff0000"
             android:onClick="@{()-> fragment.updateSchedule()}"
-            android:text="수정" />
+            android:text="@string/fragment_update_btn" />
 
 
         <Button
@@ -297,7 +302,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/cancelBottonColor"
             android:background="#00ff0000"
-            android:text="취소"></Button>
+            android:text="@string/fragment_add_cancel_btn"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

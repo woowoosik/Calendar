@@ -1,6 +1,5 @@
 package com.woo.calendarapp.schedule
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import org.joda.time.DateTime
 

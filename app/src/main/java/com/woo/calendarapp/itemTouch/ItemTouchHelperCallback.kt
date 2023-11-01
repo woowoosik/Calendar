@@ -1,12 +1,7 @@
 package com.woo.calendarapp.itemTouch
 
-import android.content.ContentValues.TAG
 import android.graphics.Canvas
-import android.util.Log
 import android.view.View
-import androidx.coordinatorlayout.widget.CoordinatorLayout.Behavior.getTag
-import androidx.core.view.ContentInfoCompat
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.*
 import androidx.recyclerview.widget.RecyclerView
@@ -104,7 +99,7 @@ class ItemTouchHelperCallback(
         // View의 가로 길이의 절반까지만 swipe 되도록
         val min: Float = -view.width.toFloat()/3
         // RIGHT 방향으로 swipe 막기
-        val max: Float = 0f
+        val max= 0f
 
         val x = if (isClamped) {
             // View가 고정되었을 때 swipe되는 영역 제한

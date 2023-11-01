@@ -2,22 +2,15 @@ package com.woo.calendarapp.calendar
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
-import android.text.TextUtils
 import android.util.AttributeSet
-import android.util.DisplayMetrics
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import androidx.core.content.ContextCompat
-import androidx.core.view.forEach
 import com.woo.calendarapp.R
 import com.woo.calendarapp.databinding.ChildBinding
-import com.woo.calendarapp.schedule.Schedule
 import com.woo.calendarapp.schedule.Schedulebar
 
 
@@ -64,7 +57,7 @@ class ChildView @JvmOverloads constructor(
         binding.childTv.text = schedulebar.title
 
         val dHeight = resources.displayMetrics.heightPixels
-        var h = dHeight/42
+        val h = dHeight/42
 
         /// h/5.toFloat() ?????
         binding.childTv.textSize = h/5.toFloat()

@@ -59,9 +59,9 @@ class KakaoRetrofit{
 
         val api = retrofit.create(KakaoAPI::class.java) // 통신 인터페이스를 객체로 생성
 
-        var result = ResultSearchKeyword(listOf())
+        val result = ResultSearchKeyword(listOf())
 
-        var list : MutableList<KakaoRetrofit.Place> = mutableListOf()
+        var list : MutableList<Place> = mutableListOf()
         val size = 15
         for(i in 0..3) {
                 val call =

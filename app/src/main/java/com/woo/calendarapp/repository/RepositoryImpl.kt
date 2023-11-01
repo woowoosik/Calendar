@@ -1,15 +1,8 @@
 package com.woo.calendarapp.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.viewModelScope
-import com.woo.calendarapp.EventObserver
 import com.woo.calendarapp.KakaoRetrofit
 import com.woo.calendarapp.schedule.Schedule
 import com.woo.calendarapp.schedule.ScheduleDao
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import javax.inject.Inject
 

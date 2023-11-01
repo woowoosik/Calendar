@@ -44,7 +44,7 @@ class BottomAddMapAdapter(private var list: KakaoRetrofit.ResultSearchKeyword) :
         holder.binding.address.text = "지번 : ${list.documents[position].address_name}"
         holder.binding.keyword.text = list.documents[position].place_name
         holder.binding.roadAddress.text ="도로명 : ${ list.documents[position].road_address_name }"
-        holder.binding.place.text = " $position 카테고리 : ${ list.documents[position].category_name }"
+        holder.binding.place.text = "카테고리 : ${ list.documents[position].category_name }"
 
         holder.binding.addMapItem.setOnClickListener {
             listener.onItemClick(list.documents[position])

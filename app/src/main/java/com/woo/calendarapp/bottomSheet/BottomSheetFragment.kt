@@ -1,14 +1,9 @@
 package com.woo.calendarapp.bottomSheet
 
-import android.app.Dialog
-import android.content.Context
+import android.annotation.SuppressLint
 import android.graphics.Color
-import android.graphics.Point
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import android.widget.FrameLayout
-import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -16,22 +11,17 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.woo.calendarapp.EventObserver
 import com.woo.calendarapp.R
 import com.woo.calendarapp.adapter.BottomRecyclerAdapter
 import com.woo.calendarapp.databinding.BottomsheetMainBinding
 import com.woo.calendarapp.fragment.AddFragment
-import com.woo.calendarapp.fragment.UpdateFragment
-import com.woo.calendarapp.generated.callback.OnClickListener
 import com.woo.calendarapp.itemTouch.ItemTouchHelperCallback
 import com.woo.calendarapp.schedule.Schedule
 import com.woo.calendarapp.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class BottomSheetFragment : BottomSheetDialogFragment(){
@@ -48,7 +38,7 @@ class BottomSheetFragment : BottomSheetDialogFragment(){
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?):
-            View? {
+            View {
 
         sheetBinding = DataBindingUtil.inflate(inflater, R.layout.bottomsheet_main, container, false)
 
@@ -96,7 +86,7 @@ class BottomSheetFragment : BottomSheetDialogFragment(){
 
 
         sheetBinding.bottomMainBack.setOnClickListener {
-            bottomSheetBehavior!!.state = STATE_HIDDEN
+            bottomSheetBehavior.state = STATE_HIDDEN
         }
 
         deleteListener()
@@ -104,12 +94,12 @@ class BottomSheetFragment : BottomSheetDialogFragment(){
 
         mainViewModel.updateOpen.observe(viewLifecycleOwner, EventObserver {
 
-            bottomSheetBehavior!!.state = STATE_HIDDEN
+            bottomSheetBehavior.state = STATE_HIDDEN
         })
 
         sheetBinding.addSchedule.setOnClickListener {
             // 추가
-            bottomSheetBehavior!!.state = BottomSheetBehavior.STATE_HIDDEN
+            bottomSheetBehavior.state = STATE_HIDDEN
             val bundle = Bundle()
             bundle.putString("start", sheetBinding.clickDate.text.toString())
             bundle.putString("end", sheetBinding.clickDate.text.toString())
@@ -142,11 +132,11 @@ class BottomSheetFragment : BottomSheetDialogFragment(){
         val view = view
 
         view!!.post{
-            val parent = view!!.parent as View
+            val parent = view.parent as View
             val params = parent.layoutParams as CoordinatorLayout.LayoutParams
             val behavior = params.behavior
             bottomSheetBehavior = behavior as BottomSheetBehavior<*>
-            bottomSheetBehavior!!.peekHeight = view!!.measuredHeight
+            bottomSheetBehavior.peekHeight = view.measuredHeight
             parent.setBackgroundColor(Color.TRANSPARENT)
 
         }
@@ -154,6 +144,7 @@ class BottomSheetFragment : BottomSheetDialogFragment(){
     }
 
 
+    @SuppressLint("ClickableViewAccessibility")
     fun deleteListener() {
         val itemTouchHelperCallback = ItemTouchHelperCallback()
         val helper = ItemTouchHelper(itemTouchHelperCallback)

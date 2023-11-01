@@ -1,8 +1,6 @@
 package com.woo.calendarapp
 
-import android.util.Log
 import androidx.lifecycle.Observer
-import com.woo.calendarapp.viewmodel.MainViewModel
 
 class EventObserver<T>(private val onEventUnhandledContent: (T) -> Unit) :
     Observer<EventObserver.Event<T>> {

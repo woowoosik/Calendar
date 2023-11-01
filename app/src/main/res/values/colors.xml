@@ -29,5 +29,8 @@
 
     <color name="editText">#FD9B95</color>
 
+    <color name="barColor">#FF796F</color>
+    <color name="textColor">#ffffff</color>
+
 
 </resources>

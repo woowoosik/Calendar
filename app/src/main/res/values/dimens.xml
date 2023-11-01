@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="bottomsheet_add_map_txt_size">30sp</dimen>
+
+    <dimen name="bottomsheet_add_map_item_keyword">20sp</dimen>
+    <dimen name="bottomsheet_add_map_item_address">15sp</dimen>
+    <dimen name="bottomsheet_add_map_item_road_address">15sp</dimen>
+    <dimen name="bottomsheet_add_map_item_place">15sp</dimen>
+
+
+    <dimen name="bottomsheet_child_title_padding">10dp</dimen>
+    <dimen name="bottomsheet_child_title_txt_size">20sp</dimen>
+    <dimen name="bottomsheet_child_date_padding">10dp</dimen>
+    <dimen name="bottomsheet_child_txt_size">20sp</dimen>
+    <dimen name="bottomsheet_child_content_txt_size">15sp</dimen>
+
+    <dimen name="fragment_main_txt_size">20sp</dimen>
+
+
+    <dimen name="bottomsheet_rc_item_title_txt_size">20sp</dimen>
+
+    <dimen name="fragment_add_txt_size">20sp</dimen>
+    <dimen name="fragment_add_date_padding">10dp</dimen>
+    <dimen name="fragment_add_date_txt_size">20sp</dimen>
+
+    <dimen name="fragment_add_txt_line_size">20sp</dimen>
+    <dimen name="fragment_add_et_size">30sp</dimen>
+    <dimen name="fragment_add_et_margin">15dp</dimen>
+
+
+    <dimen name="fragment_add_map_txt_size">20sp</dimen>
+    <dimen name="fragment_add_map_padding">15dp</dimen>
+    <dimen name="fragment_add_map_switch_padding">15dp</dimen>
+    <dimen name="fragment_add_map_keyword_search_txt_size">15sp</dimen>
+
+    <dimen name="fragment_add_map_bt_place">15sp</dimen>
+
+
+    <dimen name="toolbar_txt_size">25sp</dimen>
+
+
+
+</resources>

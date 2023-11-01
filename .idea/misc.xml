@@ -25,11 +25,11 @@
         <entry key="app/src/main/res/drawable/schedulebar.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/toolbar_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/bottomsheet_add_map.xml" value="0.125" />
+        <entry key="app/src/main/res/layout/bottomsheet_add_map.xml" value="0.1" />
         <entry key="app/src/main/res/layout/bottomsheet_add_map_item.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/bottomsheet_child.xml" value="0.165" />
-        <entry key="app/src/main/res/layout/bottomsheet_main.xml" value="0.125" />
-        <entry key="app/src/main/res/layout/bottomsheet_rc_item.xml" value="0.11" />
+        <entry key="app/src/main/res/layout/bottomsheet_child.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/bottomsheet_main.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/bottomsheet_rc_item.xml" value="0.1" />
         <entry key="app/src/main/res/layout/child.xml" value="0.146875" />
         <entry key="app/src/main/res/layout/color_circle.xml" value="0.11" />
         <entry key="app/src/main/res/layout/dialog.xml" value="0.26811594202898553" />
@@ -47,7 +47,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_17_PREVIEW" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_16" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

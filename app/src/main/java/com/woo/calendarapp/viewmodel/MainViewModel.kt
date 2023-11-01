@@ -8,8 +8,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woo.calendarapp.EventObserver
 import com.woo.calendarapp.KakaoRetrofit
-import com.woo.calendarapp.R
-import com.woo.calendarapp.kakaoApi.KakaoAPI
 import com.woo.calendarapp.module.RepositoryRoom
 import com.woo.calendarapp.repository.Repository
 import com.woo.calendarapp.schedule.Schedule
@@ -17,11 +15,6 @@ import com.woo.calendarapp.schedule.Schedulebar
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import org.joda.time.DateTime
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
 
 @HiltViewModel
@@ -188,8 +181,8 @@ class MainViewModel @Inject constructor(
 
     fun getSchedulebarData(month:List<DateTime>): Array<Array<Array<Schedulebar>>> {
         dataList = Array(6) {
-            kotlin.Array(5) {
-                kotlin.Array(7) {
+            Array(5) {
+                Array(7) {
                     Schedulebar(
                         0,
                         DateTime(1, 1, 1, 0, 0, 0),
@@ -217,7 +210,7 @@ class MainViewModel @Inject constructor(
             }
 
 
-            var continueList: MutableList<Schedulebar> = mutableListOf()
+            val continueList: MutableList<Schedulebar> = mutableListOf()
             var week = -1
             var ix = 0
 
@@ -264,7 +257,7 @@ class MainViewModel @Inject constructor(
                             Color.parseColor("#00000000"),
                             Color.parseColor("#000000"))
 
-                    var d = if (date.dayOfWeek == 7) {
+                    val d = if (date.dayOfWeek == 7) {
                         date.dayOfWeek-1
                     } else {
                         6 - date.dayOfWeek
@@ -290,13 +283,12 @@ class MainViewModel @Inject constructor(
 
 
             monthList.forEachIndexed lable2@{ index__, date ->
-                var index_ = index__ % 7
+                val index_ = index__ % 7
                 if (index_ == 0) week++
-                var idx = 0
 
                 var n = 0
                 var x = 0
-                var deleteList = ArrayList<Int>()
+                val deleteList = ArrayList<Int>()
 
                 continueList.forEachIndexed { index, schedulebar ->
                     if (date > schedulebar.endDate) {

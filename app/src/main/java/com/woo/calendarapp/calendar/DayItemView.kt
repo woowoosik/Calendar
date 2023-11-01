@@ -7,10 +7,7 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.text.TextPaint
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
-import com.woo.calendarapp.fragment.MainFragment
-import com.woo.calendarapp.schedule.Schedule
 import com.woo.calendarapp.utils.CalendarUtils
 import com.woo.calendarapp.viewmodel.MainViewModel
 import org.joda.time.DateTime
@@ -33,7 +30,7 @@ class DayItemView @JvmOverloads constructor(
     init {
 
         val dHeight = resources.displayMetrics.heightPixels
-        var h = dHeight / 42
+        val h = dHeight / 42
         paint = TextPaint().apply {
             isAntiAlias = true
             textSize = h.toFloat()

@@ -2,7 +2,6 @@ package com.woo.calendarapp.bottomSheet
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -10,19 +9,15 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.woo.calendarapp.KakaoRetrofit
-import com.woo.calendarapp.LoadingDialog
 import com.woo.calendarapp.R
 import com.woo.calendarapp.adapter.BottomAddMapAdapter
 import com.woo.calendarapp.databinding.BottomsheetAddMapBinding
-import com.woo.calendarapp.fragment.AddFragment
-import com.woo.calendarapp.fragment.AddMapFragment
 import com.woo.calendarapp.viewmodel.MainViewModel
 
 class BottomSheetAddMap : BottomSheetDialogFragment() {
@@ -43,7 +38,7 @@ class BottomSheetAddMap : BottomSheetDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.bottomsheet_add_map, container, false)
 
@@ -61,7 +56,7 @@ class BottomSheetAddMap : BottomSheetDialogFragment() {
 
             adapter.setOnItemClickListener(object:BottomAddMapAdapter.OnItemClickListener{
                 override fun onItemClick(item: KakaoRetrofit.Place) {
-                    bottomSheetBehavior!!.state = BottomSheetBehavior.STATE_HIDDEN
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                     viewModel.setLocation(item.x.toDouble(), item.y.toDouble())
                 }
 
@@ -93,7 +88,7 @@ class BottomSheetAddMap : BottomSheetDialogFragment() {
         val view = view
 
         view!!.post{
-            val parent = view!!.parent as View
+            val parent = view.parent as View
             val params = parent.layoutParams as CoordinatorLayout.LayoutParams
             val behavior = params.behavior
             bottomSheetBehavior = behavior as BottomSheetBehavior<*>

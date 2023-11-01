@@ -66,7 +66,7 @@ class AddMapFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         viewModel =  ViewModelProvider(activity as ViewModelStoreOwner)[MainViewModel::class.java]
 
         binding =  DataBindingUtil.inflate(inflater, R.layout.fragment_add_map, container, false)
@@ -117,8 +117,8 @@ class AddMapFragment : Fragment() {
             ) {
                 fusedLocationClient.lastLocation
                     .addOnSuccessListener { location : Location? ->
-                        mapLocation = Pair(location!!.longitude, location!!.latitude)
-                        moveMap(location!!.longitude, location!!.latitude)
+                        mapLocation = Pair(location!!.longitude, location.latitude)
+                        moveMap(location.longitude, location.latitude)
 
                     }
             }else{
@@ -208,8 +208,8 @@ class AddMapFragment : Fragment() {
             if( !this::mapLocation.isInitialized ){
                 fusedLocationClient.lastLocation
                     .addOnSuccessListener { location : Location? ->
-                        mapLocation = Pair(location!!.longitude, location!!.latitude)
-                        moveMap(location!!.longitude, location!!.latitude)
+                        mapLocation = Pair(location!!.longitude, location.latitude)
+                        moveMap(location.longitude, location.latitude)
 
                     }
             }else{

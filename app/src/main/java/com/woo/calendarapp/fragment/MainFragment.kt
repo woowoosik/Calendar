@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.children
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -16,9 +15,7 @@ import com.woo.calendarapp.EventObserver
 import com.woo.calendarapp.R
 import com.woo.calendarapp.bottomSheet.BottomSheetFragment
 import com.woo.calendarapp.calendar.ChildView
-import com.woo.calendarapp.calendar.DayItemView
 import com.woo.calendarapp.databinding.FragmentMainBinding
-import com.woo.calendarapp.schedule.Schedule
 import com.woo.calendarapp.schedule.Schedulebar
 import com.woo.calendarapp.utils.CalendarUtils.Companion.getMonthList
 import com.woo.calendarapp.viewmodel.MainFragmentViewModel
@@ -60,7 +57,7 @@ class MainFragment: Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         mainFragmentVM = ViewModelProvider(activity as ViewModelStoreOwner)[MainFragmentViewModel::class.java]
         mainViewModel = ViewModelProvider(activity as ViewModelStoreOwner)[MainViewModel::class.java]
@@ -98,14 +95,6 @@ class MainFragment: Fragment() {
 
 
 
-   /* fun showBottomSheet(){
-        val bottomSheetFragment = BottomSheetFragment()
-        activity?.let {
-                it1 -> bottomSheetFragment.show(it1.supportFragmentManager, bottomSheetFragment.tag)
-        }
-    }*/
-
-
     fun drawSchedulebar(list: List<Int>, schedulebar:Schedulebar, context: Context){
         mainFragmentBinding.fl.addView(
             ChildView(
@@ -122,7 +111,7 @@ class MainFragment: Fragment() {
         val dWidth = resources.displayMetrics.widthPixels
         val dHeight = resources.displayMetrics.heightPixels
 
-        var h = dHeight / 42
+        val h = dHeight / 42
         var _width = dWidth / 7
         val margin = 3
         val topMargin = 5

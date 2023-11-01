@@ -1,10 +1,8 @@
 package com.woo.calendarapp.fragment
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Context
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.location.Location
@@ -12,18 +10,13 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.core.view.isEmpty
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -43,13 +36,9 @@ import com.woo.calendarapp.kakaoApi.KakaoMapUtils.Companion.moveMap
 import com.woo.calendarapp.schedule.Schedule
 import com.woo.calendarapp.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.channels.ticker
-import net.daum.mf.map.api.MapPOIItem
-import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
 import org.joda.time.DateTime
 import yuku.ambilwarna.AmbilWarnaDialog
-import java.util.*
 import javax.inject.Inject
 
 
@@ -79,14 +68,12 @@ class AddFragment : Fragment() {
     @Inject
     lateinit var permissionCheck : PermissionCheck
 
-    private val cal = Calendar.getInstance()
-
     @RequiresApi(Build.VERSION_CODES.N)
     @SuppressLint("ResourceAsColor")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         viewModel =  ViewModelProvider(activity as ViewModelStoreOwner)[MainViewModel::class.java]
 
         binding =  DataBindingUtil.inflate(inflater, R.layout.fragment_add, container, false)
@@ -182,7 +169,7 @@ class AddFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int){
                 if(s.isEmpty()){
-                    binding.addSchedulebar.text = "Schedule Bar"
+                    binding.addSchedulebar.text = getString(R.string.schedulebar)
                 }else{
                     binding.addSchedulebar.text = s
                 }
@@ -248,12 +235,7 @@ class AddFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-/*
-        if(permissionCheck.isAllPermissionsGranted() ){
-            if(binding.mapView.isEmpty()){
-                getMap()
-            }
-        }*/
+
         if(binding.mapView.isEmpty()){
             getMap()
         }
@@ -299,7 +281,7 @@ class AddFragment : Fragment() {
         textColor.setColor(tColor)
     }
 
-    @SuppressLint("ResourceType")
+    @SuppressLint("ResourceType", "SetTextI18n")
     fun datePicker(b:Int){   //캘린더뷰 만들기
         val startDate = DateTime("${binding.startDate.text}")
         val endDate = DateTime("${binding.endDate.text}")
@@ -382,9 +364,9 @@ class AddFragment : Fragment() {
             if( !this::mapLocation.isInitialized ){
                 fusedLocationClient.lastLocation
                     .addOnSuccessListener { location : Location? ->
-                        mapLocation = Pair(location!!.longitude, location!!.latitude)
-                        viewModel.setLocation(location!!.longitude, location!!.latitude)
-                        moveMap(location!!.longitude, location!!.latitude, mapView)
+                        mapLocation = Pair(location!!.longitude, location.latitude)
+                        viewModel.setLocation(location.longitude, location.latitude)
+                        moveMap(location.longitude, location.latitude, mapView)
                     }
             }else{
                 moveMap(mapLocation.first, mapLocation.second, mapView)

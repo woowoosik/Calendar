@@ -43,7 +43,7 @@
             android:layout_height="0dp"
             app:layout_constraintHeight_percent="0.07"
             android:gravity="center"
-            android:textSize="20dp"
+            android:textSize="@dimen/fragment_main_txt_size"
             android:textStyle="bold"
             android:textColor="@color/black"
             android:background="@drawable/line_bottom"

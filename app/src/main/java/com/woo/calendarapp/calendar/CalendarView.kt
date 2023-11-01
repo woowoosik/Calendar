@@ -2,12 +2,8 @@ package com.woo.calendarapp.calendar
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.widget.FrameLayout
-import androidx.core.content.withStyledAttributes
 import androidx.core.view.children
-import com.woo.calendarapp.bottomSheet.BottomSheetFragment
-import com.woo.calendarapp.schedule.Schedule
 import com.woo.calendarapp.utils.CalendarUtils
 import com.woo.calendarapp.viewmodel.MainViewModel
 import org.joda.time.DateTime
@@ -36,7 +32,7 @@ class CalendarView @JvmOverloads constructor(
             suggestedMinimumHeight,
             (_height * CalendarUtils.WEEKS_PER_MONTH).toInt()
         )
-        setMeasuredDimension(FrameLayout.getDefaultSize(suggestedMinimumWidth, widthMeasureSpec), h)
+        setMeasuredDimension(getDefaultSize(suggestedMinimumWidth, widthMeasureSpec), h)
 
     }
 
