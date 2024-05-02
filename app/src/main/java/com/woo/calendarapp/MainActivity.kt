@@ -31,10 +31,18 @@ class MainActivity : AppCompatActivity(){
 
 
         mainViewModel.addMainComplate.observe(this, EventObserver {
+
+            val yn = DateTime.now().toString("yyyy")
             val n = DateTime.now().toString("MM")
+            val yh = DateTime(mainViewModel.getDate()).toString("yyyy")
             val h = DateTime(mainViewModel.getDate()).toString("MM")
+
             mainBinding.calendar.adapter = MainFragmentAdapter(this)
-            mainBinding.calendar.setCurrentItem(MainFragmentAdapter.START_POSITION +( h.toInt() - n.toInt()), false)
+            if(yh == yn){
+                mainBinding.calendar.setCurrentItem(MainFragmentAdapter.START_POSITION +( h.toInt() - n.toInt()), false)
+            }else{
+                mainBinding.calendar.setCurrentItem(MainFragmentAdapter.START_POSITION +( h.toInt() - n.toInt() + (12*(yh.toInt()-yn.toInt()))), false)
+            }
         })
 
         mainBinding.calendar.adapter = MainFragmentAdapter(this)
