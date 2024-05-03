@@ -1,10 +1,9 @@
 # schedule_calendar
 
 
-
 ## 메인 페이지 
 
-|<img src="" width="200" height="400"/>|
+|<img src="https://github.com/woowoosik/Calendar/assets/49232649/017b028f-bed1-4472-a60b-4dc0e938cd99" width="200" height="400"/>|
 |------|
 |메인 달력 이동|
 
@@ -31,6 +30,10 @@
 
 #### 일정 추가 (kakao API)
 
+|<img src="https://github.com/woowoosik/Calendar/assets/49232649/ff1edded-544c-4079-81c2-a932d6c446a6" width="200" height="400"/>|
+|------|
+|일정 추가|
+
 기본적인 제목과 내용을 추가하고, `retrofit`과 `kakao api`를 이용하여 지도를 추가하는 기능을 구현하였습니다.
 
 날짜는 data picker 선택할 수 있게 하였고, color는 `ambilwarna` color picker 라이브러리를 사용아여 메인에 나올 스케줄 바의 컬러을 선택하는 기능을 추가하였습니다.
@@ -40,6 +43,10 @@
 
 
 #### 일정 수정 및 삭제
+
+|<img src="https://github.com/woowoosik/Calendar/assets/49232649/d9a47379-0fe4-4767-8089-35d152c8fe06" width="200" height="400"/>|
+|------|
+|일정 수정 및 삭제|
 
 삭제는 recycler에서 왼쪽 방향으로 당길 시에 나오는 삭제 버튼으로 일정을 삭제할 수 있습니다. 
 
