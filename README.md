@@ -36,7 +36,7 @@
 
 기본적인 제목과 내용을 추가하고, `retrofit`과 `kakao api`를 이용하여 지도를 추가하는 기능을 구현하였습니다.
 
-날짜는 data picker 선택할 수 있게 하였고, color는 `ambilwarna` color picker 라이브러리를 사용아여 메인에 나올 스케줄 바의 컬러를 선택하는 기능을 추가하였습니다.
+날짜는 data picker로 선택할 수 있게 하였고, color는 `ambilwarna` color picker 라이브러리를 사용아여 메인에 나올 스케줄 바의 컬러를 선택하는 기능을 추가하였습니다.
 
 
 
